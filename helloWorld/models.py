@@ -6,6 +6,7 @@ class Sample(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField(default=0)
     job = models.CharField(max_length=100, null=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
