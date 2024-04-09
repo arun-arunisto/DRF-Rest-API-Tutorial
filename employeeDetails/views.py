@@ -18,8 +18,16 @@ def employee_list(request):
     serialized_data = EmployeeSerializer(all_emp, many=True) #if we are fetching more than one data we need to add many=True
     return Response(serialized_data.data)
 
-@api_view(["GET"])
+@api_view(["GET", "PUT"])
 def employee_details(request, id):
+    if request.method == "PUT":
+        emp = Employee.objects.get(id=id)
+        serializer = EmployeeSerializer(emp, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
     emp = Employee.objects.get(id=id)
     serialized_data = EmployeeSerializer(emp)
     return Response(serialized_data.data)
