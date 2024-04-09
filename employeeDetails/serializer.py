@@ -12,5 +12,6 @@ class EmployeeSerializer(serializers.Serializer):
     joined_at = serializers.DateField()
     is_active = serializers.BooleanField()
 
+    #post request
     def create(self, validated_data):
         return Employee.objects.create(**validated_data)
