@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from .models import Employee
 
 #creating serializers based on models field
 class EmployeeSerializer(serializers.Serializer):
@@ -11,3 +11,6 @@ class EmployeeSerializer(serializers.Serializer):
     designation = serializers.CharField()
     joined_at = serializers.DateField()
     is_active = serializers.BooleanField()
+
+    def create(self, validated_data):
+        return Employee.objects.create(**validated_data)
