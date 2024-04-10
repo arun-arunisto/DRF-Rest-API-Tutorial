@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'mainApp',
     'helloWorld',
-    'employeeDetails'
+    'employeeDetails',
+    'StudentDetails'
 ]
 
 MIDDLEWARE = [

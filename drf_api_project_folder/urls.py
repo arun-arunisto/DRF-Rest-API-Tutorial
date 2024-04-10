@@ -22,5 +22,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')), #this from drf official website
     path('', include('mainApp.urls')),
     path('api/hello-world-api/', include('helloWorld.urls')),
-    path('api/employee-details-api/', include('employeeDetails.urls'))
+    path('api/employee-details-api/', include('employeeDetails.urls')),
+    path('api/student-details-api/', include('StudentDetails.urls'))
 ]
