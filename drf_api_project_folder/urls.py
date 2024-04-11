@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('mainApp.urls')),
     path('api/hello-world-api/', include('helloWorld.urls')),
     path('api/employee-details-api/', include('employeeDetails.urls')),
-    path('api/student-details-api/', include('StudentDetails.urls'))
+    path('api/student-details-api/', include('StudentDetails.urls')),
+    path('api/todo-api/', include('TodoApp.urls'))
 ]

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'mainApp',
     'helloWorld',
     'employeeDetails',
-    'StudentDetails'
+    'StudentDetails',
+    'TodoApp'
 ]
 
 MIDDLEWARE = [
