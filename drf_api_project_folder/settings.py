@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'helloWorld',
     'employeeDetails',
     'StudentDetails',
-    'TodoApp'
+    'TodoApp',
+    'votersDetails'
 ]
 
 MIDDLEWARE = [
