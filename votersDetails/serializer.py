@@ -12,3 +12,8 @@ class VotersSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Age must be greater than 18")
         return value
 
+    #object-level validation
+    def validate(self, data):
+        if len(data["voter_id_no"]) > 15:
+            raise serializers.ValidationError("Invalid Voter id")
+        return data
