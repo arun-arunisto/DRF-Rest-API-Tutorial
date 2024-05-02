@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Main App</title>
-</head>
-<body>
-<h2>Hello World</h2>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %} ARUNISTO API WORLD {% endblock %}
+{% block content %}
+<div class="card w-75 mt-3" style="margin-right:auto;margin-left:auto;">
+    <div class="card-title text-center mt-3">
+        <h2>WELCOME TO ARUNISTO's API WORLD USING DRF</h2>
+    </div>
+    <div class="card-body">
+        {% for d in data %}
+        <div class="card w-75 mt-3" style="margin-right: auto; margin-left:auto;">
+            <div class="card-title text-center mt-3">
+                <h5>{{d.name}}</h5>
+            </div>
+            <div class="card-text" style="padding: 10px;">
+                <p>{{d.info}}</p>
+            </div>
+            <div class="mt-3 text-center">
+                <h5>ENDPOINTS</h5>
+            </div>
+            <div>
+                <h5 style="margin: 10px; color:red;">http://host:port/{{d.connection}}endpoints/</h5>
+                <ul>
+                    {% for ep in d.endpoints %}
+                        <li>{{ep}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
