@@ -13,7 +13,7 @@ class Tracks(models.Model):
     track_name = models.CharField(max_length=50)
     artist_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(default=datetime.datetime.now())
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="album")
 
     def __str__(self):
         return f"Track {self.track_name}"

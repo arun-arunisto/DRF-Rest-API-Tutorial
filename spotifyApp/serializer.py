@@ -8,6 +8,9 @@ class TrackSerializer(serializers.ModelSerializer):
 
 #Serializer for Album
 class AlbumSerializer(serializers.ModelSerializer):
+    #nested serializer concept
+    album_name = serializers.CharField()
+    album = TrackSerializer(many=True, read_only=True)
     class Meta:
         model = Album
-        exclude = ["id"]
+        exclude = ["id",]

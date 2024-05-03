@@ -5,6 +5,12 @@ from .models import Tracks, Album
 from .serializer import TrackSerializer, AlbumSerializer
 
 # Create your views here.
+#nested serializer concept
+class AlbumListView(APIView):
+    def get(self, request):
+        data = Album.objects.all()
+        serialized_data = AlbumSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
 class TracksListView(APIView):
     def get(self, request):
         data = Tracks.objects.all()
@@ -37,11 +43,7 @@ class TrackDetailView(APIView):
         data.delete()
         return Response({"message":"Deleted Successfully!!"})
 
-class AlbumListView(APIView):
-    def get(self, request):
-        data = Album.objects.all()
-        serialized_data = AlbumSerializer(data, many=True)
-        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
 
 
 
