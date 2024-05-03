@@ -11,6 +11,13 @@ class AlbumListView(APIView):
         data = Album.objects.all()
         serialized_data = AlbumSerializer(data, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+class AlbumDetailView(APIView):
+    def get(self, request, id):
+        data = Album.objects.get(id=id)
+        serialized_data = AlbumSerializer(data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
 class TracksListView(APIView):
     def get(self, request):
         data = Tracks.objects.all()
