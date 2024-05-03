@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from .models import Tracks
-from .serializer import TrackSerializer
+from .models import Tracks, Album
+from .serializer import TrackSerializer, AlbumSerializer
 
 # Create your views here.
 class TracksListView(APIView):
@@ -36,6 +36,12 @@ class TrackDetailView(APIView):
         data = Tracks.objects.get(id=pk)
         data.delete()
         return Response({"message":"Deleted Successfully!!"})
+
+class AlbumListView(APIView):
+    def get(self, request):
+        data = Album.objects.all()
+        serialized_data = AlbumSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
 
