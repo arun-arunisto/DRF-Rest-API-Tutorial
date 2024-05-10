@@ -37,3 +37,16 @@ class BlogListView(APIView):
         data.delete()
         return Response({"Message":"Deleted Successfully!!"}, status=status.HTTP_200_OK)
 
+class CategoryDetailView(APIView):
+    def get(self, request):
+        data = Category.objects.all()
+        serialized_data = CategorySerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+class CategoryListView(APIView):
+    def get(self, request, id):
+        data = Category.objects.get(id=id)
+        serialized_data = CategorySerializer(data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+
