@@ -8,8 +8,11 @@ class BlogSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class CategorySerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField()
-    category = BlogSerializer(many=True, read_only=True)
+    #category_name = serializers.CharField()
+    #category = BlogSerializer(many=True, read_only=True)
+
+    #API Reference
+    category = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Category
