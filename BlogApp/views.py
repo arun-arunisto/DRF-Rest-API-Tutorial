@@ -40,13 +40,13 @@ class BlogListView(APIView):
 class CategoryDetailView(APIView):
     def get(self, request):
         data = Category.objects.all()
-        serialized_data = CategorySerializer(data, many=True)
+        serialized_data = CategorySerializer(data, many=True, context={'request': request})
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 class CategoryListView(APIView):
     def get(self, request, id):
         data = Category.objects.get(id=id)
-        serialized_data = CategorySerializer(data)
+        serialized_data = CategorySerializer(data, context={'request': request})
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 
