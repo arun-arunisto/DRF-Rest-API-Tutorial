@@ -12,7 +12,8 @@ class CategorySerializer(serializers.ModelSerializer):
     #category = BlogSerializer(many=True, read_only=True)
 
     #API Reference
-    category = serializers.StringRelatedField(many=True)
+    #category = serializers.StringRelatedField(many=True)
+    category = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Category
