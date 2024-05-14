@@ -3,8 +3,23 @@ from rest_framework import status
 from rest_framework.views import APIView
 from .models import Author, Category, Book
 from .serializer import AuthorSerializer, CategorySerializer, BookSerializer
+from rest_framework import mixins, generics
 
 # Create your views here.
+#Generic Views
+class BookListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    #get method
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    #post method
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+#Normal class based views
 class BookListView(APIView):
     def get(self, request):
         data = Book.objects.all()
