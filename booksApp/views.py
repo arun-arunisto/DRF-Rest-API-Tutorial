@@ -28,6 +28,16 @@ class AuthorListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, gene
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+class CategoryListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 
 
 #Normal class based views
