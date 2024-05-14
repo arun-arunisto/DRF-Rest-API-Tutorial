@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'votersDetails',
     'spotifyApp',
     'BlogApp',
+    'booksApp'
 ]
 
 MIDDLEWARE = [
