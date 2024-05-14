@@ -19,6 +19,17 @@ class BookListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generi
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+class AuthorListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+
 #Normal class based views
 class BookListView(APIView):
     def get(self, request):
