@@ -37,6 +37,27 @@ class CategoryListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+class BookDetailGenericView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class AuthorDetailGenericView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class CategoryDetailGenericView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
 
 
 
