@@ -40,6 +40,7 @@ class CategoryListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, ge
 class BookDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    lookup_field = "book_title"
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
