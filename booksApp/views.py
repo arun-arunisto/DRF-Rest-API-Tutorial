@@ -37,7 +37,7 @@ class CategoryListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-class BookDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class BookDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
@@ -45,8 +45,11 @@ class BookDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, 
         return self.retrieve(request, *args, **kwargs)
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
-class AuthorDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+
+class AuthorDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
@@ -54,8 +57,10 @@ class AuthorDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
         return self.retrieve(request, *args, **kwargs)
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
-class CategoryDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class CategoryDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -63,6 +68,8 @@ class CategoryDetailGenericView(mixins.RetrieveModelMixin, mixins.UpdateModelMix
         return self.retrieve(request, *args, **kwargs)
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 
