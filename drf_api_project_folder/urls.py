@@ -28,5 +28,6 @@ urlpatterns = [
     path('api/voters-details-api/', include('votersDetails.urls')),
     path('api/spotify-api/', include('spotifyApp.urls')),
     path('api/blog-api/', include('BlogApp.urls')),
-    path('api/books-api/', include('booksApp.urls'))
+    path('api/books-api/', include('booksApp.urls')),
+    path("api/movie-review-api/", include('MovieReviewApp.urls'))
 ]
