@@ -28,3 +28,11 @@ class MovieListConcreteView(generics.ListAPIView):
 class ReviewListConcreteView(generics.ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+class MovieDetailConcreteView(generics.RetrieveAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+class ReviewDetailConcreteView(generics.RetrieveAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
