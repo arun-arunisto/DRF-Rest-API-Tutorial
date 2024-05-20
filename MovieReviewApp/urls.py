@@ -10,5 +10,7 @@ urlpatterns = [
     path('movie-detail-concrete-view/<int:pk>/', MovieDetailConcreteView.as_view(), name="movie-detail-concrete-view"),
     path('review-detail-concrete-view/<int:pk>/', ReviewDetailConcreteView.as_view(), name="review-detail-concrete-view"),
     path('movie-delete-concrete-view/<int:pk>/', MovieDeleteConcreteView.as_view(), name="movie-delete-concrete-view"),
-    path('review-delete-concrete-view/<int:pk>/', ReviewDeleteConcreteView.as_view(), name="review-delete-concrete-view")
+    path('review-delete-concrete-view/<int:pk>/', ReviewDeleteConcreteView.as_view(), name="review-delete-concrete-view"),
+    path('movie-update-concrete-view/<int:pk>/', MovieUpdateConcreteView.as_view(), name="movie-update-concrete-view"),
+    path('review-update-concrete-view/<int:pk>/', ReviewUpdateConcreteView.as_view(), name="review-update-concrete-view")
 ]
