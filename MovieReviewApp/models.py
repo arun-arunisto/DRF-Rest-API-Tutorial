@@ -11,7 +11,7 @@ class Movie(models.Model):
         return f"Movie: {self.movie_title}"
 
 class Review(models.Model):
-    rating = models.IntegerField()
+    rating = models.FloatField()
     comment = models.TextField(max_length=500)
     review_time = models.DateTimeField(auto_now_add=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie")

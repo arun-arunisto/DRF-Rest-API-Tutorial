@@ -16,3 +16,15 @@ class MovieListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
 class MovieCreateConcreteView(generics.CreateAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+
+class ReviewCreateConcreteView(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+class MovieListConcreteView(generics.ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+class ReviewListConcreteView(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
