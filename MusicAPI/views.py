@@ -39,6 +39,13 @@ class AlbumViewSet(viewsets.ViewSet):
         serialized_data = AlbumSerializer(album)
         return Response(serialized_data.data)
 
+    def create(self, request):
+        serialized_data = AlbumSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors)
+
 class ArtistViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Artist.objects.all()
@@ -50,6 +57,13 @@ class ArtistViewSet(viewsets.ViewSet):
         artist = get_object_or_404(queryset, pk=pk)
         serialized_data = ArtistSerializer(artist)
         return Response(serialized_data.data)
+
+    def create(self, request):
+        serialized_data = ArtistSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors)
 
 
 
