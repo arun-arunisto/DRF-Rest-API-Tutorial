@@ -35,6 +35,11 @@ class TrackViewSet(viewsets.ViewSet):
             return Response(serialized_data.data)
         return Response(serialized_data.errors)
 
+    def destroy(self, request, pk=None):
+        track = get_object_or_404(Track, pk=pk)
+        track.delete()
+        return Response({"message":"Deleted Successfully"})
+
 class AlbumViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Album.objects.all()
@@ -62,6 +67,11 @@ class AlbumViewSet(viewsets.ViewSet):
             return Response(serialized_data.data)
         return Response(serialized_data.errors)
 
+    def destroy(self, request, pk=None):
+        album = get_object_or_404(Album, pk=pk)
+        album.delete()
+        return Response({"message":"Deleted Successfully!"})
+
 class ArtistViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Artist.objects.all()
@@ -88,6 +98,11 @@ class ArtistViewSet(viewsets.ViewSet):
             serialized_data.save()
             return Response(serialized_data.data)
         return Response(serialized_data.errors)
+
+    def destroy(self, request, pk=None):
+        artist = get_object_or_404(Artist, pk=pk)
+        artist.delete()
+        return Response({"message":"Deleted Successfully!"})
 
 
 
