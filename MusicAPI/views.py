@@ -18,14 +18,7 @@ class TrackViewSet(viewsets.ViewSet):
         serialized_data = TrackSerializer(track)
         return Response(serialized_data.data)
 
-    #creating POST
-    def retrieve(self, request):
-        serialized_data = TrackSerializer(data = request.data)
-        if serialized_data.is_valid():
-            serialized_data.save()
-            return Response(serialized_data.data)
-        else:
-            return Response(serialized_data.errors)
+
 
 class AlbumViewSet(viewsets.ViewSet):
     def list(self, request):
