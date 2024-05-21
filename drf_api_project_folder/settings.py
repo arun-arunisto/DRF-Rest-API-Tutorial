@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'BlogApp',
     'booksApp',
     'MovieReviewApp',
+    'MusicAPI',
 ]
 
 MIDDLEWARE = [
