@@ -27,6 +27,14 @@ class TrackViewSet(viewsets.ViewSet):
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self, request, pk=None):
+        track = get_object_or_404(Track, pk=pk)
+        serialized_data = TrackSerializer(track, data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors)
+
 class AlbumViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Album.objects.all()
@@ -46,6 +54,14 @@ class AlbumViewSet(viewsets.ViewSet):
             return Response(serialized_data.data)
         return Response(serialized_data.errors)
 
+    def update(self, request, pk=None):
+        album = get_object_or_404(Album, pk=pk)
+        serialized_data = AlbumSerializer(album, data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors)
+
 class ArtistViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Artist.objects.all()
@@ -60,6 +76,14 @@ class ArtistViewSet(viewsets.ViewSet):
 
     def create(self, request):
         serialized_data = ArtistSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors)
+
+    def update(self, request, pk=None):
+        artist = get_object_or_404(Artist, pk=pk)
+        serialized_data = ArtistSerializer(artist, data=request.data)
         if serialized_data.is_valid():
             serialized_data.save()
             return Response(serialized_data.data)
