@@ -104,6 +104,18 @@ class ArtistViewSet(viewsets.ViewSet):
         artist.delete()
         return Response({"message":"Deleted Successfully!"})
 
+class TrackModelView(viewsets.ModelViewSet):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+
+class AlbumModelView(viewsets.ModelViewSet):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
+
+class ArtistModelView(viewsets.ModelViewSet):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
+
 
 
 
