@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 from .models import *
 from .serializer import *
 
@@ -18,7 +19,13 @@ class TrackViewSet(viewsets.ViewSet):
         serialized_data = TrackSerializer(track)
         return Response(serialized_data.data)
 
-
+    #creare
+    def create(self, request):
+        serialized_data = TrackSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AlbumViewSet(viewsets.ViewSet):
     def list(self, request):
