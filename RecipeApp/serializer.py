@@ -1,12 +1,8 @@
 from rest_framework import serializers
 from .models import *
 
-class ChefSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Chef
-        fields = "__all__"
-
 class RecipeSerializer(serializers.ModelSerializer):
+    chef = serializers.StringRelatedField(read_only=True) #This is the line we added
     class Meta:
         model = Recipe
         fields = "__all__"
