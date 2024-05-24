@@ -4,12 +4,14 @@ from rest_framework.views import APIView
 from .models import Author, Category, Book
 from .serializer import AuthorSerializer, CategorySerializer, BookSerializer
 from rest_framework import mixins, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Create your views here.
 #Generic Views
 class BookListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     #get method
     def get(self, request, *args, **kwargs):
