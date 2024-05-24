@@ -3,10 +3,10 @@ from .serializer import EmployeeSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 # Create your views here.
 @api_view(['GET', 'POST']) #this decorator only used when we use function based views
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def employee_list(request):
     if request.method == "POST":
         serializer = EmployeeSerializer(data=request.data)

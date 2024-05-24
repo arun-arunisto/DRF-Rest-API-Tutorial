@@ -3,12 +3,13 @@ from rest_framework import status
 from rest_framework import generics
 from .models import *
 from .serializer import *
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 class RecipeListCreateView(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
