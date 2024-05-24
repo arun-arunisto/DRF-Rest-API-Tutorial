@@ -20,6 +20,24 @@ def book_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def book_details(request, id):
-    pass
+    if request.method == 'PUT':
+        book_data = Book.objects.get(id=id)
+        serialized_data = BookSerializer(book_data, data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        book_data = Book.objects.get(id=id)
+        book_data.delete()
+        return Response({"message":"Deleted Successfully!"}, status=status.HTTP_200_OK)
+
+    book_data = Book.objects.get(id=id)
+    serialized_data = BookSerializer(book_data)
+    return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+
 
 
