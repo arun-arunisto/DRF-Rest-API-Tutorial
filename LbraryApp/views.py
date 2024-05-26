@@ -55,6 +55,7 @@ def ReaderListView(request):
     return Response(serialized_data.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminUserOrReadOnly])
 def ReaderDetailView(request, id):
     if request.method == 'PUT':
         reader_data = Reader.objects.get(id=id)
