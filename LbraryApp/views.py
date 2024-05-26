@@ -2,10 +2,12 @@ from .models import *
 from .serializer import BookSerializer, ReaderSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from .permission import *
 
 # Create your views here.
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminUserOrReadOnly])
 def book_list(request):
     if request.method == "POST":
         serialized_data = BookSerializer(data=request.data)
