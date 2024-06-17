@@ -53,6 +53,10 @@ INSTALLED_APPS = [
     'LbraryApp',
 ]
 
+#adding the new application
+INSTALLED_APPS+=['advancedMethods']
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
