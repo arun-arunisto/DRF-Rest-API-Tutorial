@@ -8,7 +8,7 @@ from rest_framework.viewsets import generics
 from rest_framework.views import APIView
 import hashlib
 from .program_utils import ProgramUtils
-from .decorators import require_authentication
+from .decorators import require_authentication, require_authentication_cls
 
 
 """@api_view(['GET', 'POST'])
@@ -154,3 +154,11 @@ def logout(request):
 @require_authentication
 def hello_world(request):
     return Response({"message":"hello world"}, status=status.HTTP_200_OK)
+
+
+class UserDetailViewAuth(generics.GenericAPIView):
+    @require_authentication_cls
+    def get(self, request, *args, **kwargs):
+        user_data = LoginCredUsers.objects.get(id=kwargs['pk'])
+        serialized_data = LogCredSerializers(user_data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
