@@ -11,5 +11,7 @@ urlpatterns =[
     path('login-class-view/', LoginView.as_view(), name='login-class-view'),
     path('login-class-viewset/', LoginViewSet.as_view(), name='login-class-viewset'),
     path('login-n-generate/', LoginNGenerate.as_view(), name='login-n-generate'),
-    path('logout/', logout, name="logout")
+    path('logout/', logout, name="logout"),
+    path('hello-world/', hello_world, name='hello-world'),
+    path('user-detail-view-auth/<int:pk>/', UserDetailViewAuth.as_view(), name='user-detail-view-auth')
 ]
