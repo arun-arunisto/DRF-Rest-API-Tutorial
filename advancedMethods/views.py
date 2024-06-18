@@ -1,10 +1,12 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializer import LogCredSerializers
+from .serializer import *
 from .models import LoginCredUsers
 import logging
 from rest_framework.viewsets import generics
+from rest_framework.views import APIView
+import hashlib
 
 """@api_view(['GET', 'POST'])
 def advanced_methods(request):
@@ -56,6 +58,50 @@ class UserListView(generics.ListCreateAPIView):
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LoginCredUsers.objects.all()
     serializer_class = LogCredSerializers
-    
 
+@api_view(["POST"])
+def login_view(request):
+    serialized_data = LoginFormSerializer(data=request.data)
+    if serialized_data.is_valid():
+        username = serialized_data.validated_data["username"]
+        password = serialized_data.validated_data["pass_wd"]
+        print(username, password)
+        try:
+            user_data = LoginCredUsers.objects.get(username=username)
+        except LoginCredUsers.DoesNotExist:
+            return Response({"error":"User not found!"}, status=status.HTTP_400_BAD_REQUEST)
+        if user_data.pass_wd == hashlib.sha256(password.encode()).hexdigest():
+            serialized_data = LogCredSerializers(user_data)
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error":"Username / Password is incorrect!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    else:
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginView(APIView):
+    def post(self, request):
+        serialized_data = LoginFormSerializer(data=request.data)
+        if serialized_data.is_valid():
+            username = serialized_data.validated_data["username"]
+            password = serialized_data.validated_data["pass_wd"]
+
+            try:
+                user_data = LoginCredUsers.objects.get(username=username)
+            except LoginCredUsers.DoesNotExist:
+                return Response({"error":"User not found!"}, status=status.HTTP_404_NOT_FOUND)
+            
+            if user_data.pass_wd == hashlib.sha256(password.encode()).hexdigest():
+                serialized_data = LogCredSerializers(user_data)
+                return Response(serialized_data.data, status=status.HTTP_200_OK)
+            else:
+                return Response({"error":"Username / Password is incorrect!"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginViewSet(generics.GenericAPIView):
+    queryset = LoginCredUsers.objects.all()
+    serializer_class = LoginFormSerializer
+
+    pass                 
 
