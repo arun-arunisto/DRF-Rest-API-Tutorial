@@ -20,3 +20,9 @@ class LogCredSerializers(serializers.ModelSerializer):
             validated_data['pass_wd'] = instance.pass_wd
         return super().update(instance, validated_data)
 
+class LoginFormSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    pass_wd = serializers.CharField(write_only=True)
+    class Meta:
+        model = LoginCredUsers
+        exclude = ("mail_id",)
