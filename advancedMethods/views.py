@@ -8,6 +8,7 @@ from rest_framework.viewsets import generics
 from rest_framework.views import APIView
 import hashlib
 from .program_utils import ProgramUtils
+from .decorators import require_authentication
 
 
 """@api_view(['GET', 'POST'])
@@ -147,3 +148,9 @@ class LoginNGenerate(generics.GenericAPIView):
 def logout(request):
     request.session.clear()
     return Response({"message":"Logged out successfully"}, status=status.HTTP_200_OK)
+
+
+@api_view()
+@require_authentication
+def hello_world(request):
+    return Response({"message":"hello world"}, status=status.HTTP_200_OK)
