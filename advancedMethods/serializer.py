@@ -17,5 +17,6 @@ class LogCredSerializers(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if 'pass_wd' in validated_data:
             instance.hash_passwrd(validated_data['pass_wd'])
+            validated_data['pass_wd'] = instance.pass_wd
         return super().update(instance, validated_data)
 
