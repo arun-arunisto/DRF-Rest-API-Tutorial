@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import LoginCredUsers
+from .models import LoginCredUsers, FileUpload
 
 class LogCredSerializers(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +26,12 @@ class LoginFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginCredUsers
         exclude = ("mail_id",)
+
+# file upload serializer
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileUpload
+        fields = "__all__"
+        
+
+

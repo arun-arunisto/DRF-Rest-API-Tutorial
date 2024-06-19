@@ -84,3 +84,73 @@ def hello_world(request):
     return Response({"message":"hello world"}, status=status.HTTP_200_OK)
 ```
 Next we need to implement decorators on class based views.
+
+## 19.06.2024
+### File Upload
+Today we are going to implement the uploading files in our rest_framework.
+To upload file using restframework we need to follow some steps
+
+First we need to create a model to file. Here first we're going to use `FileField`. 
+
+```Python
+class FileUpload(models.Model):
+    file = models.FileField(upload_to="uploads/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+```
+After adding a model dont forget to make migrate.
+
+After making these changes, we're going to add this on serializers. like below,
+
+```Python
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileUpload
+        fields = "__all__"
+```
+First we're going to implement this on a function based view like below
+```Python
+@api_view(['POST'])
+def upload_file(request):
+    if request.method == 'POST':
+        serialized_data = FileUploadSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+After adding the view route to the url in `urls.py` file. Then configure the media settings in your `settings.py` file, like below,
+```Python
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+``` 
+And configure the media files on your `urls.py` file in your application folder like below.
+
+```Python
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+You can test the endpoint using the below command
+
+```bash
+curl -X -F "file=@<path-to-your-file>" http://127.0.0.1:8000/<endpoint>/
+```
+Now we're going to look how this works on class-based views
+
+```Python
+class UploadFileClassView(generics.GenericAPIView):
+    serializer_class = FileUploadSerializer
+    def post(self, request):
+        serialized_data = self.serializer_class(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
+```
+
+
+
