@@ -1,5 +1,7 @@
 from django.urls import path
 from advancedMethods.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns =[
     #path('advanced-methods/', advanced_methods, name='advanced-methods')
@@ -13,5 +15,9 @@ urlpatterns =[
     path('login-n-generate/', LoginNGenerate.as_view(), name='login-n-generate'),
     path('logout/', logout, name="logout"),
     path('hello-world/', hello_world, name='hello-world'),
-    path('user-detail-view-auth/<int:pk>/', UserDetailViewAuth.as_view(), name='user-detail-view-auth')
+    path('user-detail-view-auth/<int:pk>/', UserDetailViewAuth.as_view(), name='user-detail-view-auth'),
+    path('upload-file/', upload_file, name='upload-file'),
+    path('upload-file-class-view/', UploadFileClassView.as_view(), name="upload-file-class-view")
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

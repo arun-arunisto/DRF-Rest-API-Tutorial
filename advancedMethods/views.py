@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializer import *
-from .models import LoginCredUsers
+from .models import LoginCredUsers, FileUpload
 import logging
 from rest_framework.viewsets import generics
 from rest_framework.views import APIView
@@ -162,3 +162,23 @@ class UserDetailViewAuth(generics.GenericAPIView):
         user_data = LoginCredUsers.objects.get(id=kwargs['pk'])
         serialized_data = LogCredSerializers(user_data)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+#uploading a file
+@api_view(['POST'])
+def upload_file(request):
+    if request.method == 'POST':
+        serialized_data = FileUploadSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UploadFileClassView(generics.GenericAPIView):
+    serializer_class = FileUploadSerializer
+    def post(self, request):
+        serialized_data = self.serializer_class(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
+    
