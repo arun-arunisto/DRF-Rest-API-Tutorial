@@ -9,7 +9,9 @@ from rest_framework.views import APIView
 import hashlib
 from .program_utils import ProgramUtils
 from .decorators import require_authentication, require_authentication_cls
-
+import os
+from django.http import FileResponse
+from urllib.parse import unquote
 
 """@api_view(['GET', 'POST'])
 def advanced_methods(request):
@@ -181,4 +183,21 @@ class UploadFileClassView(generics.GenericAPIView):
             serialized_data.save()
             return Response(serialized_data.data, status=status.HTTP_200_OK)
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['GET'])
+def download_file(request, filename):
+    if request.method == "GET":
+        #sanitizing the filename
+        filename = os.path.basename(unquote(filename))
+        file_path = os.path.join("/home/royalbrothers/work/APITutorial/DRF-Rest-API-Tutorial/media/uploads", filename)
+        print(os.path.exists(file_path))
+        if os.path.exists(file_path):
+            try:
+                response = FileResponse(open(file_path, 'rb'))
+                response['Content-Disposition'] = f"attachment, filename='{filename}'"
+                return response
+            except Exception as e:
+                return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message":"something went wrong"}, status=status.HTTP_404_NOT_FOUND)
+        

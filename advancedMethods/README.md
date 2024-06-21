@@ -152,5 +152,11 @@ class UploadFileClassView(generics.GenericAPIView):
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
 ```
 
+### File Download
+Next, we are going to look into how to enable the option for users to download the file. First we are going to create a Function based view, like below.
+
+```Python
+
+```
 
 
