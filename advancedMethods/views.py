@@ -12,6 +12,7 @@ from .decorators import require_authentication, require_authentication_cls
 import os
 from django.http import FileResponse
 from urllib.parse import unquote
+from django.core.mail import send_mail
 
 """@api_view(['GET', 'POST'])
 def advanced_methods(request):
@@ -60,6 +61,15 @@ def edit_user(request, pk):
 class UserListView(generics.ListCreateAPIView):
     queryset = LoginCredUsers.objects.all()
     serializer_class = LogCredSerializers
+
+    #mail sending using django
+    def post(self, request):
+        serialized_data = LogCredSerializers(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            #print(serialized_data.data["mail_id"])
+            send_mail("TEST MAIL", "test mail for django", "arun.a@royalbrothers.com", [serialized_data.data["mail_id"]])
+        return Response(serialized_data.data, status=status.HTTP_201_CREATED)
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LoginCredUsers.objects.all()

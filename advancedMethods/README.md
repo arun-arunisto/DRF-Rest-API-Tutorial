@@ -159,4 +159,27 @@ Next, we are going to look into how to enable the option for users to download t
 
 ```
 
+## 24.06.2024 
+### Sending an Email
+Today configuring and sending emails using Django's mail method first we need to configure our EMAIL in our settings.py file, like below,
 
+```Python
+#settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+```
+
+Then import the send_mail() method from django like below
+
+```Python
+from django.core.mail import send_mail
+```
+Then you can simply send mail using this method like below 
+
+```Python
+send_mail("<subject>", "<message>", "<from_mail_id>", "<to_mail_id>")
+```
