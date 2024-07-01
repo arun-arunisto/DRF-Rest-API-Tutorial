@@ -24,7 +24,7 @@ class FileUpload(models.Model):
 
 #for the stack overflow
 class Process(models.Model):
-    title = models.Charfield(max_length=255)
+    title = models.CharField(max_length=255)
     date_up = models.DateTimeField(auto_now_add=True)
     days_activation = models.PositiveSmallIntegerField(default=0)
 
@@ -37,8 +37,8 @@ class Location(models.Model):
         return f"Location: {self.name}"
 
 class Products(models.Model):
-    name = models.CharField(unique=True, blank=False, null=False)
-    location_id = models.ForeignKey(Location, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=255, unique=True, blank=False, null=False)
+    location_id = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     price = models.IntegerField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -47,8 +47,8 @@ class Products(models.Model):
 
 class AdminUsers(models.Model):
     name = models.CharField(max_length=255, unique=True, blank=False, null=False)
-    password = models.CharField(blank=False, null=False)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL)
+    password = models.CharField(max_length=255, blank=False, null=False)
+    location_id = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     mail_id = models.EmailField(unique=True, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -60,10 +60,10 @@ class AdminUsers(models.Model):
         return f"Admin user: {self.name}"
 
 class Orders(models.Model):
-    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL)
-    admin_id = models.ForeignKey(AdminUsers, on_delete=models.SET_NULL)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL)
-    user_id = models.ForeignKey(LoginCredUsers, on_delete=models.SET_NULL)
+    product_id = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    admin_id = models.ForeignKey(AdminUsers, on_delete=models.SET_NULL, null=True)
+    location_id = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+    user_id = models.ForeignKey(LoginCredUsers, on_delete=models.SET_NULL, null=True)
     status = models.IntegerField(choices=((0, "Pending"),
                                           (1, "Delivered"),
                                           (2, "Cancelled"),
