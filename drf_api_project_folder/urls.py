@@ -34,5 +34,4 @@ urlpatterns = [
     path('api/recipe-api/', include('RecipeApp.urls')),
     path('api/library-api/', include('LbraryApp.urls')),
     path('api/advanced-methods-api/', include('advancedMethods.urls'))
-
 ]

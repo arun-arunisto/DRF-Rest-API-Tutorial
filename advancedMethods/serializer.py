@@ -32,6 +32,10 @@ class FileUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileUpload
         fields = "__all__"
+
+
+### for stackoverflow
+
         
 
 

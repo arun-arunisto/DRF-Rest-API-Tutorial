@@ -195,9 +195,10 @@ class UploadFileClassView(generics.GenericAPIView):
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def download_file(request, filename):
+def download_file(request):
     if request.method == "GET":
         #sanitizing the filename
+        filename = "git-cheat-sheet-education.pdf"
         filename = os.path.basename(unquote(filename))
         file_path = os.path.join("/home/royalbrothers/work/APITutorial/DRF-Rest-API-Tutorial/media/uploads", filename)
         print(os.path.exists(file_path))
