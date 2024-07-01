@@ -14,6 +14,8 @@ from django.http import FileResponse
 from urllib.parse import unquote
 from django.core.mail import send_mail
 
+
+
 """@api_view(['GET', 'POST'])
 def advanced_methods(request):
     return Response({"message":"Hello World})"""
@@ -239,7 +241,7 @@ class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 class AdminUsersListCreateAPIView(generics.ListCreateAPIView):
     queryset = AdminUsers.objects.all()
     serializer_class = AdminUsersSerializer
-
+    
     def get_queryset(self):
         return super().get_queryset().order_by("-id")
 
@@ -258,5 +260,23 @@ class OrdersRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
 
+class AdminLoginFormViewSet(generics.GenericAPIView):
+    serializer_class = AdminLoginFormSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=request.data)
+        if serialized_data.is_valid():
+            username = serialized_data.validated_data["username"]
+            password = serialized_data.validated_data["password"]
+            try:
+                admin_data = AdminUsers.objects.get(name=username)
+            except AdminUsers.DoesNotExist:
+                return Response({"message":"Invalid username/password"})
+            if admin_data.password == hashlib.sha256(password.encode()).hexdigest():
+                return Response({"message":"Login Successfully!!"})
+            else:
+                return Response({"message":"Invalid username/password"})
+        else:
+            return Response({"message":"Something went wrong!!"})
 
 
