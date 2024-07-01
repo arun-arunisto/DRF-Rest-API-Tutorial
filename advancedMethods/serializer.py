@@ -36,7 +36,7 @@ class FileUploadSerializer(serializers.ModelSerializer):
 
 
 ### for the permission classes
-class LocationSerializer(serializers.Serializer):
+class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields= "__all__"
@@ -67,8 +67,15 @@ class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = "__all__"
+
+class AdminLoginFormSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = AdminUsers
+        exclude = ("mail_id", "location_id", "name")
 ### for stackoverflow
 
-        
 
 

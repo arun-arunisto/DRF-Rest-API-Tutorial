@@ -26,7 +26,8 @@ urlpatterns =[
     path('admin-list-create-view/', AdminUsersListCreateAPIView.as_view(), name="admin-list-create-view"),
     path("admin-detail-view/<int:pk>/", AdminUsersRetrieveUpdateDestroyAPIView.as_view(), name="admin-user-detail-view"),
     path("orders-list-create-view/", OrdersListCreateAPIView.as_view(),name="orders-list-create-view"),
-    path("orders-detail-view/<int:pk>/", OrdersRetrieveUpdateDestroyAPIView.as_view(), name="orders-detail-view")
+    path("orders-detail-view/<int:pk>/", OrdersRetrieveUpdateDestroyAPIView.as_view(), name="orders-detail-view"),
+    path('admin-user-login-view/', AdminLoginFormViewSet.as_view(), name="admin-loginform")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
