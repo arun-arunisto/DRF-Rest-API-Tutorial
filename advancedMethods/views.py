@@ -212,3 +212,51 @@ def download_file(request):
         else:
             return Response({"message":"something went wrong"}, status=status.HTTP_404_NOT_FOUND)
         
+
+class LocationListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-id")
+
+class LocationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+
+class ProductListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Products.objects.all()
+    serializer_class = ProductsSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-id")
+
+class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Products.objects.all()
+    serializer_class = ProductsSerializer
+
+class AdminUsersListCreateAPIView(generics.ListCreateAPIView):
+    queryset = AdminUsers.objects.all()
+    serializer_class = AdminUsersSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-id")
+
+class AdminUsersRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AdminUsers.objects.all()
+    serializer_class = AdminUsersSerializer
+
+class OrdersListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrdersSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-id")
+
+class OrdersRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrdersSerializer
+
+
+
