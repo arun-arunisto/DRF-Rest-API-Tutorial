@@ -8,11 +8,14 @@ from rest_framework.viewsets import generics
 from rest_framework.views import APIView
 import hashlib
 from .program_utils import ProgramUtils
-from .decorators import require_authentication, require_authentication_cls
+from .decorators import require_authentication, require_authentication_cls, require_admin_authentication
 import os
 from django.http import FileResponse
 from urllib.parse import unquote
 from django.core.mail import send_mail
+from django.utils.decorators import method_decorator
+from rest_framework.authentication import BaseAuthentication, get_authorization_header
+
 
 
 
@@ -214,7 +217,6 @@ def download_file(request):
         else:
             return Response({"message":"something went wrong"}, status=status.HTTP_404_NOT_FOUND)
         
-
 class LocationListCreateAPIView(generics.ListCreateAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
@@ -273,10 +275,31 @@ class AdminLoginFormViewSet(generics.GenericAPIView):
             except AdminUsers.DoesNotExist:
                 return Response({"message":"Invalid username/password"})
             if admin_data.password == hashlib.sha256(password.encode()).hexdigest():
-                return Response({"message":"Login Successfully!!"})
+                data = AdminUsers.objects.select_related("location_id").filter(name=username).values("id", "location_id__id")
+                # print(data[0])
+                request.session["location_id"] = data[0]["location_id__id"]
+                request.session["admin_id"] = data[0]["id"]
+                return Response({"location_id":request.session["location_id"],
+                                 "admin_id":request.session["admin_id"]}, status=status.HTTP_200_OK)
+                # return Response({"data":data})
             else:
                 return Response({"message":"Invalid username/password"})
         else:
             return Response({"message":"Something went wrong!!"})
 
 
+
+@method_decorator(require_admin_authentication, name="dispatch")
+class LocationListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        print(kwargs.get("location").id)
+        data = Location.objects.get(id=1)
+        serialized_data = LocationSerializer(data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serialized_data = LocationSerializer(data=serialized_data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
