@@ -152,5 +152,46 @@ class UploadFileClassView(generics.GenericAPIView):
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
 ```
 
+## 03.07.2024
+Added decorators for class based views to use decorator for class based view first we need to import `method_decorator` from `django.utils.decorator` like below
 
+```Python
+from django.utils.decorators import method_decorator
+```
+Then you can simply access the decorators for `class based views` like below:
+
+```Python
+@method_decorator(require_admin_authentication, name="dispatch")
+class LocationListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        print(kwargs.get("location").id)
+        data = Location.objects.get(id=1)
+        serialized_data = LocationSerializer(data)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serialized_data = LocationSerializer(data=serialized_data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
+```
+In  `method_decorator`, the name argument specifies which method of the class-based view the decorator should be applied to. This is particularly useful when you want to apply the decorator to the `dispatch` method or other specific methods like `get`, `post`, etc., without directly modifying those methods. So if you want to use the `method_decorator` for specific method you need to mention it. like below,
+
+```Python
+@method_decorator(require_admin_authentication, name="post")
+class LocationListAPIViewMethodDecoratorSpecific(APIView):
+    def get(self, request, *args, **kwargs):
+        data = Location.objects.all()
+        serialized_data = LocationSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serialized_data = LocationSerializer(data=serialized_data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
+```
+The above provided code is the example of using decorators for a specific method
 
