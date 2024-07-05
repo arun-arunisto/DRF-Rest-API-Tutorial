@@ -303,3 +303,19 @@ class LocationListAPIView(APIView):
             serialized_data.save()
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+#trying to use decorator for a specific method
+@method_decorator(require_admin_authentication, name="post")
+class LocationListAPIViewMethodDecoratorSpecific(APIView):
+    def get(self, request, *args, **kwargs):
+        data = Location.objects.all()
+        serialized_data = LocationSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serialized_data = LocationSerializer(data=serialized_data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
