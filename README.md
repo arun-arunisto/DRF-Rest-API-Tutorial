@@ -448,5 +448,6 @@ Topics:
 - Sending Email
 ## 03.07.2024
 - Added Decorators to class based views
+- Decorators for a specific method
 
 
