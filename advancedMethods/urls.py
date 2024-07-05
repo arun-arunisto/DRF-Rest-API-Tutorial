@@ -28,7 +28,8 @@ urlpatterns =[
     path("orders-list-create-view/", OrdersListCreateAPIView.as_view(),name="orders-list-create-view"),
     path("orders-detail-view/<int:pk>/", OrdersRetrieveUpdateDestroyAPIView.as_view(), name="orders-detail-view"),
     path('admin-user-login-view/', AdminLoginFormViewSet.as_view(), name="admin-loginform"),
-    path('location-list-api-view/', LocationListAPIView.as_view(), name="location-list-api-view")
+    path('location-list-api-view/', LocationListAPIView.as_view(), name="location-list-api-view"),
+    path('location-list-method/', LocationListAPIViewMethodDecoratorSpecific.as_view(), name="location-list-method")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
