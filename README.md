@@ -450,6 +450,7 @@ Topics:
 - Added Decorators to class based views
 - Decorators for a specific method
 ## 09.07.2024
+- Changing Timezones
 Cron Jobs & Worker
 - Adding a cron job using "django-crontab"
   To install the package use the below command:
