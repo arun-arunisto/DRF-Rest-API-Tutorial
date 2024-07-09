@@ -457,6 +457,6 @@ Cron Jobs & Worker
   ```CommandPrompt
   pip install django-crontab
   ```
-  You can find the documentation about usage goto `advanceMethods` `README.md` file.
+  You can find the documentation about usage goto `advancedMethods` `README.md` file.
 
 
