@@ -151,7 +151,6 @@ class UploadFileClassView(generics.GenericAPIView):
             return Response(serialized_data.data, status=status.HTTP_200_OK)
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
 ```
-
 ### File Download
 Next, we are going to look into how to enable the option for users to download the file. First we are going to create a Function based view, like below.
 
@@ -183,7 +182,6 @@ Then you can simply send mail using this method like below
 ```Python
 send_mail("<subject>", "<message>", "<from_mail_id>", "<to_mail_id>")
 ```
-
 ## 03.07.2024
 Added decorators for class based views to use decorator for class based view first we need to import `method_decorator` from `django.utils.decorator` like below
 
