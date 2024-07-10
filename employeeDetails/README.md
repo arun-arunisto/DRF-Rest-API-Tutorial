@@ -45,7 +45,7 @@ def employee_list(request):
 
 After successfully created the views add your views to the `urls.py` then run the program and navigate to the url that provided by you here, and if you're running this repo the url will be like `http://127.0.0.1:8000/api/employee-details-api/employee-list/` navigate to this url using your browser the result will be look like below
 
-![img_4.png](img_4.png)
+![../img_4.png](../img_4.png)
 
 Next, the code for fetching single data
 ```python
