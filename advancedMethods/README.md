@@ -225,4 +225,3 @@ class LocationListAPIViewMethodDecoratorSpecific(APIView):
         return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
 ```
 The above provided code is the example of using decorators for a specific method
-```
