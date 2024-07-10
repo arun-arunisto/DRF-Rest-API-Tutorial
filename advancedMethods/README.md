@@ -151,7 +151,37 @@ class UploadFileClassView(generics.GenericAPIView):
             return Response(serialized_data.data, status=status.HTTP_200_OK)
         return Response(serialized_data.error, status=status.HTTP_400_BAD_REQUEST)
 ```
+### File Download
+Next, we are going to look into how to enable the option for users to download the file. First we are going to create a Function based view, like below.
 
+```Python
+
+```
+
+## 24.06.2024 
+### Sending an Email
+Today configuring and sending emails using Django's mail method first we need to configure our EMAIL in our settings.py file, like below,
+
+```Python
+#settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+```
+
+Then import the send_mail() method from django like below
+
+```Python
+from django.core.mail import send_mail
+```
+Then you can simply send mail using this method like below 
+
+```Python
+send_mail("<subject>", "<message>", "<from_mail_id>", "<to_mail_id>")
+```
 ## 03.07.2024
 Added decorators for class based views to use decorator for class based view first we need to import `method_decorator` from `django.utils.decorator` like below
 
@@ -194,4 +224,3 @@ class LocationListAPIViewMethodDecoratorSpecific(APIView):
         return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
 ```
 The above provided code is the example of using decorators for a specific method
-

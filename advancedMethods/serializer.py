@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import LoginCredUsers, FileUpload
+from .models import *
 
 class LogCredSerializers(serializers.ModelSerializer):
     class Meta:
@@ -32,6 +32,50 @@ class FileUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileUpload
         fields = "__all__"
-        
+
+
+
+### for the permission classes
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields= "__all__"
+
+class ProductsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Products
+        fields = "__all__"
+
+class AdminUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminUsers
+        fields = "__all__"
+    
+    def create(self, validated_data):
+        admin = AdminUsers(**validated_data)
+        admin.hash_passwrd(validated_data['password'])
+        admin.save()
+        return admin
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            instance.hash_passwrd(validated_data['password'])
+            validated_data['password'] = instance.password
+        return super().update(instance, validated_data)
+
+class OrdersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Orders
+        fields = "__all__"
+
+class AdminLoginFormSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = AdminUsers
+        exclude = ("mail_id", "location_id", "name")
+### for stackoverflow
+
 
 
