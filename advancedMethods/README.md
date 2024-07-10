@@ -221,5 +221,22 @@ CRONJOBS = [
 ```
 `'0 * * * *'` - This is the `cron expression` for set the timings so, here i am sending mail in every one hour. This `'0 * * * *'` expression represents the timing every 1 hour.
 
+After configuring the `CRONJOBS` to add all `CRONJOBS` to `cron tab`, use the below command
+
+```bash
+python manage.py crontab add
+```
+To show the current active jobs in your project, use the below command
+
+```bash
+python manage.py crontab show
+```
+
+To remove the jobs from your `cron tab` use the below command
+
+```bash
+python manage.py crontab remove
+```
+
 You can also generate your own `cron expressions`, there's lots of free available websites are there to generate `cron expresions`.
 
