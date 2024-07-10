@@ -183,8 +183,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 #configuring cron jobs to the application
 CRONJOBS = [
-    #adding the first task for one minute
-    ('* * * * *', 'advancedMethods.tasks.printing_hello_world_in_every_min'),
     #adding the second task for every hour
     ('0 * * * *', 'advancedMethods.tasks.send_mail_in_every_one_hr'),
 
