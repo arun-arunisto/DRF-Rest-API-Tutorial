@@ -59,7 +59,8 @@ INSTALLED_APPS = [
 ]
 
 #adding the new application
-INSTALLED_APPS+=['advancedMethods']
+#Added django_crontab to the INSTALLED_APPS
+INSTALLED_APPS+=['advancedMethods', 'django_crontab']
 
 
 MIDDLEWARE = [
@@ -129,12 +130,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
+#TIME_ZONE = 'UTC'
+#changing TIME_ZONE to india
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
-USE_TZ = True
-
+#USE_TZ = True
+#for not to use timezone
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -174,3 +179,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+
+#configuring cron jobs to the application
+CRONJOBS = [
+    #adding the first task for one minute
+    ('* * * * *', 'advancedMethods.tasks.printing_hello_world_in_every_min'),
+    #adding the second task for every hour
+    ('0 * * * *', 'advancedMethods.tasks.send_mail_in_every_one_hr'),
+
+]
