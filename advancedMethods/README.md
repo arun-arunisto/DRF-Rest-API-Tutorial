@@ -240,3 +240,6 @@ python manage.py crontab remove
 
 You can also generate your own `cron expressions`, there's lots of free available websites are there to generate `cron expresions`.
 
+
+### Celery, Redis, Flower 
+
