@@ -183,8 +183,6 @@ Then you can simply send mail using this method like below
 send_mail("<subject>", "<message>", "<from_mail_id>", "<to_mail_id>")
 ```
 
-<<<<<<< HEAD
-=======
 ## 10.07.2024
 To configure `django-crontab` on your project, first add the package in `INSTALLED_APPS` at your `settings.py`, like below:
 ```Python
@@ -240,5 +238,3 @@ python manage.py crontab remove
 ```
 Then, do this ...
 You can also generate your own `cron expressions`, there's lots of free available websites are there to generate `cron expresions`.
-
->>>>>>> c2101c2 (new)
