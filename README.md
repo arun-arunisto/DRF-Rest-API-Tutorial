@@ -478,9 +478,8 @@ Configuring celery and redis for add worker & cron jobs
   ```
 
 > [!NOTE]
-
-I am using ubuntu 24.04 and used snap for installing redis and redisinsight.
-If you're using MacOS, windows, or other linux distro please read the documentation on redis website
+> I am using ubuntu 24.04 and used snap for installing redis and redisinsight.
+> If you're using MacOS, windows, or other linux distro please read the documentation on redis website
 
 - Configuring redis with django
   
