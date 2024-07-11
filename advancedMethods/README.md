@@ -183,3 +183,62 @@ Then you can simply send mail using this method like below
 send_mail("<subject>", "<message>", "<from_mail_id>", "<to_mail_id>")
 ```
 
+<<<<<<< HEAD
+=======
+## 10.07.2024
+To configure `django-crontab` on your project, first add the package in `INSTALLED_APPS` at your `settings.py`, like below:
+```Python
+#settings.py
+INSTALLED_APPS = [
+    django_crontab,
+]
+```
+After adding the module create a file named `tasks.py` on your application folder, then add yoour cron tasks there. Here, i am simply create a task for sending email every one hour. For, that task you dont want to import anything from `django-crontab` you can simply add a task like a normal function like below
+
+```Python
+# tasks.py
+#for testing the cron jobs
+#adding a simple task for testing
+#task 1: Sending a mail in every hour
+from django.core.mail import send_mail
+
+
+#task 1
+def send_mail_in_every_one_hr():
+    send_mail("TEST MAIL", "test mail for django", "<from_mail_id>",["<to_mail_id>"])
+
+```
+
+After adding the task you need to configure your `CRON_JOBS` on your application, for that open your `settings.py` and configure `CRONJOBS` like below:
+
+```Python
+#settings.py
+#configuring cron jobs to the application
+CRONJOBS = [
+    #adding the task for every hour
+    ('0 * * * *', 'advancedMethods.tasks.send_mail_in_every_one_hr'),
+
+]
+```
+`'0 * * * *'` - This is the `cron expression` for set the timings so, here i am sending mail in every one hour. This `'0 * * * *'` expression represents the timing every 1 hour.
+
+After configuring the `CRONJOBS` to add all `CRONJOBS` to `cron tab`, use the below command
+
+```bash
+python manage.py crontab add
+```
+To show the current active jobs in your project, use the below command
+
+```bash
+python manage.py crontab show
+```
+
+To remove the jobs from your `cron tab` use the below command
+
+```bash
+python manage.py crontab remove
+```
+Then, do this ...
+You can also generate your own `cron expressions`, there's lots of free available websites are there to generate `cron expresions`.
+
+>>>>>>> c2101c2 (new)
