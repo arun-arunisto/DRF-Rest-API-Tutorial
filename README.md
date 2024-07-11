@@ -461,7 +461,32 @@ Cron Jobs & Worker
   You can find the documentation about usage goto `advancedMethods` `README.md` file.
 
 ## 11.07.2024
-- Using `celery` and `celery-worker` for scheduling a task
-- Installing `redis-server` and configuring with `django`
-- Using `flower` for  monitoring `celery`
+Configuring celery and redis for add worker & cron jobs
+- Adding celery for asychronous tasks and scheduling jobs
+
+  To install the package use the below command:
+
+  ```
+  pip install celery
+  ```
+- Adding django-celery-beta to store the periodic task in database
+
+  To install the package use the below command:
+
+  ```
+  pip install django-celery-beat
+  ```
+
+> [!NOTE]
+
+I am using ubuntu 24.04 and used snap for installing redis and redisinsight.
+If you're using MacOS, windows, or other linux distro please read the documentation on redis website
+
+- Configuring redis with django
+  
+  To install the package use the below command:
+
+  ```
+  pip install django-redis
+  ```
 
