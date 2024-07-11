@@ -460,4 +460,8 @@ Cron Jobs & Worker
   ```
   You can find the documentation about usage goto `advancedMethods` `README.md` file.
 
+## 11.07.2024
+- Using `celery` and `celery-worker` for scheduling a task
+- Installing `redis-server` and configuring with `django`
+- Using `flower` for  monitoring `celery`
 
