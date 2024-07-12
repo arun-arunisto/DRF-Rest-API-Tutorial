@@ -36,3 +36,8 @@ def subscription_termination(id): #job
     print("Task executed successfully")
 
 
+
+#for cron jobs
+@shared_task
+def send_email_celery():
+    send_mail("TEST MAIL", "test mail for django", "arun.a@royalbrothers.com",["arun.arunisto2@gmail.com"])

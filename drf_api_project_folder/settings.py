@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 load_dotenv()
 
@@ -211,3 +212,12 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
 CELERY_TIMEZONE = 'Asia/Kolkata'
+
+
+#scheduling cron job at daily 09.00AM
+CELERY_BEAT_SCHEDULE = {
+    'recurring-task': {
+        'task': 'advancedMethods.tasks.send_email_celery',
+        'schedule': crontab(hour=16, minute=39)
+    },
+}
