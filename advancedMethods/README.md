@@ -362,3 +362,6 @@ class PremiumSubscriptionListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PremiumSubscriptionSerializer
 ```
 Created views for the models that we are going to use.
+
+> [!NOTE]
+> I didn't mention the url routeing on `urls.py` for this two views so please find the url_routeing on `urls.py` file.
