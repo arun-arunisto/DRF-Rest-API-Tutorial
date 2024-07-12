@@ -465,3 +465,27 @@ celery -A <your_project_folder> flower -l info
 > for accessing flower use port 5555 [http:127.0.0.1:5555](http://127.0.0.1:5555/)
 
 And you can monitor the redis-server using command line tool `redis-cli` or with `redisinsight`
+
+Next we're going to look into how to execute `corn jobs` using `celery`. corn jobs also we're going to write a new task that sending an mail daily at 09.00AM
+
+for that first we're going to create a task first then execute it in the cron jobs, so open your `tasks.py` and create a new task like below:
+
+```Python
+#for cron jobs
+@shared_task
+def send_email_celery():
+    send_mail("TEST MAIL", "test mail for django", "arun.a@royalbrothers.com",["arun.arunisto2@gmail.com"])
+```
+
+After that open your `settings.py` file on your project folder and schedule the corn job at `09:00AM` everyday using `CELERY_BEAT_SCHEDULER`, before that you need to import a module `crontab` from `celery.scheduler`
+
+```Python
+from celery.scheduler import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'recurring-task': {
+        'task': '<app_name>.tasks.<task_name>',
+        'schedule': crontab(hour=09, minute=00)
+    },
+}
+```
