@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from .tasks import subscription_terminate_worker
 
 class LogCredSerializers(serializers.ModelSerializer):
     class Meta:
@@ -88,3 +89,11 @@ class PremiumSubscriptionSerializer(serializers.ModelSerializer):
         model = PremiumSubscription
         fields = "__all__"
 
+    def create(self, validated_data):
+        premium = PremiumSubscription(**validated_data)
+        premium_user = PremiumUsers.objects.get(id=premium.user.id)
+        premium_user.premium_status = True
+        premium_user.save()
+        premium.save()
+        subscription_terminate_worker.delay(premium_user.id)
+        return premium
