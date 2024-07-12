@@ -30,7 +30,9 @@ urlpatterns =[
     path('admin-user-login-view/', AdminLoginFormViewSet.as_view(), name="admin-loginform"),
     path('location-list-api-view/', LocationListAPIView.as_view(), name="location-list-api-view"),
     path('location-list-method/', LocationListAPIViewMethodDecoratorSpecific.as_view(), name="location-list-method"),
-    path('orders-create-api-view/', OrdersListCreateAPIView.as_view(), name="order-create-api-view")
+    path('orders-create-api-view/', OrdersListCreateAPIView.as_view(), name="order-create-api-view"),
+    path('premium-users/', PremiumUsers.as_view(), name='premium-users'),
+    path('premium-subscription/', PremiumSubscription.as_view(), name='premium-subscription')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
