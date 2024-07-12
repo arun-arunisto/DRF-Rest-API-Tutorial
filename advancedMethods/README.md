@@ -310,7 +310,17 @@ def debug_task(self):
 > on the <project_folder_name> give your project name
 
 
-For the `celery`, `redis` conceepts going to create new two tables on my `models.py` one is `PremiumUsers` and other one is `PremiumSubscription` so, we're going to create users and going to set their premium subscription start and end date and their premium status is going to be `True` and we're going to schedule a task in `celery` that whenever the end date comes the celery will do the background job that set `False` for their premium status and the table look like below:
+After creating `celery.py` file initialize the celery app to your project for that open the `__init__.py` file on the project folder and add the below code to your project.
+
+```Python
+#project_folder/__init__.py
+from .celery import app as celery_app
+
+
+__all__ = ("celery_app",)
+```
+
+For the `celery`, `redis` concepts going to create new two tables on my `models.py` one is `PremiumUsers` and other one is `PremiumSubscription` so, we're going to create users and going to set their premium subscription start and end date and their premium status is going to be `True` and we're going to schedule a task in `celery` that whenever the end date comes the celery will do the background job that set `False` for their premium status and the table look like below:
 
 ```Python
 #models.py
@@ -365,3 +375,93 @@ Created views for the models that we are going to use.
 
 > [!NOTE]
 > I didn't mention the url routeing on `urls.py` for this two views so please find the url_routeing on `urls.py` file.
+
+
+Next our logic is whenever any user add to `PremiumSubscription` our `celery` going to schedule task with their premium subscription end time for that first we need to create a Task. For that create a file on your `app directory` and name it as `tasks.py`, and add the task that you want to schedule like below:
+
+```Python
+#tasks.py
+#import the required modules for celery
+from celery import shared_task
+from .models import PremiumSubscription, PremiumUsers
+from datetime import datetime
+
+
+@shared_task
+def subscription_terminate_worker(id): #worker
+    try:
+        end_time = PremiumSubscription.objects.filter(user__id=id, user__premium_status=True).order_by("-id").first().end_date
+        time_count = (end_time - datetime.now()).total_seconds()
+        if time_count > 0:
+            print("Task is added to queue")
+            subscription_termination.apply_async(args=[id], countdown=time_count)
+            print("Task scheduled successfully")
+    except PremiumSubscription.DoesNotExist:
+        print("Data does not exist")
+    except Exception as e:
+        print(e)
+
+
+@shared_task
+def subscription_termination(id): #job
+    premium_user = PremiumUsers.objects.get(id=id)
+    premium_user.premium_status = False
+    premium_user.save()
+    print("Task executed successfully")
+```
+
+After creating the task execute the task where want to, in this tutorial I am going to use it on my serializers where i am adding my data:
+
+```Python
+#serializer.py
+class PremiumSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumSubscription
+        fields = "__all__"
+
+    def create(self, validated_data):
+        premium = PremiumSubscription(**validated_data)
+        premium_user = PremiumUsers.objects.get(id=premium.user.id)
+        premium_user.premium_status = True
+        premium_user.save()
+        premium.save()
+        subscription_terminate_worker.delay(premium_user.id) #scheduled task
+        return premium
+```
+
+After all the step use the below code to start the `redis-server` on a terminal and don't forget to activate your virtual environment,
+
+```CommandPrompt
+redis-server --port 6380 --replicaof 127.0.0.1 6379
+```
+
+Then start your django server:
+
+```CommandPrompt
+python manage.py runserver
+```
+
+After that open a new terminal on the same directory where you running your django project and run the below sxcript to start the `celery-worker`:
+
+```CommandPrompt
+celery -A <your_project_name> worker -l info
+```
+Then open new terminal on the same dir.
+
+```CommandPrompt
+celery -A <your_project_name> beat -l info
+```
+
+Then open a new terminal on the same dir for `flower`
+
+```CommandPrompt
+celery -A <your_project_folder> flower -l info
+```
+
+> [!NOTE]
+> Don't forget to activate your python virtual environment on every terminal
+
+> [!IMPORTANT]
+> for accessing flower use port 5555 [http:127.0.0.1:5555](http://127.0.0.1:5555/)
+
+And you can monitor the redis-server using command line tool `redis-cli` or with `redisinsight`
