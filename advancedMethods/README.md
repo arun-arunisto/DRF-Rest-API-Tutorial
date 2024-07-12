@@ -238,3 +238,75 @@ python manage.py crontab remove
 ```
 Then, do this ...
 You can also generate your own `cron expressions`, there's lots of free available websites are there to generate `cron expresions`.
+
+
+## 12.07.2024
+ Today going to learn how to set a cron job using `celery` module and backend cache server as `redis`, first we installed the required packages using the commands on main directory `README.md` after that need to include it in `INSTALLED_APPS` on  `settings.py` file, like below:
+
+ ```Python
+ #settings.py
+ INSTALLED_APPS = [
+    'celery',
+    'django_celery_results',
+    'django_celery_beat',
+    'django_redis',
+ ]
+ ```
+
+ After adding it on `INSTALLED_APPS` file need to configure the redis server on `settings.py` file, like below:
+
+```Python
+# REDIS CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+} 
+```
+After configuring the `REDIS` to project, going to configure `celery` on project like below:
+
+```Python
+#celery settings
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+```
+Now the `celery` and `redis` configured successfully, next need to create an application for celery for that create a file named `celery.py` on the project folder then configure with your project like below:
+
+```Python
+from __future__ import absolute_import, unicode_literals
+import os
+
+from celery import Celery
+from django.conf import settings
+
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', '<project_folder_name>.settings')
+
+app = Celery('<project_folder_name>')
+app.conf.enable_utc = False
+
+app.config_from_object(settings, namespace='CELERY')
+
+
+
+app.autodiscover_tasks()
+
+
+@app.task(bind=True)
+def debug_task(self):
+    print(f"Request: {self.request!r}")
+```
+> [!NOTE]
+> on the <project_folder_name> give your project name
+
+
