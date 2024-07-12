@@ -73,4 +73,23 @@ class Orders(models.Model):
 
     def __str__(self):
         return f"Order: {self.id}"
-    
+
+#for celery and redis
+class PremiumUsers(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    mail_id = models.EmailField(max_length=100, blank=False, null=False, unique=True)
+    premium_status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Premium user: {self.name}"
+
+class PremiumSubscription(models.Model):
+    user = models.ForeignKey(PremiumUsers, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Premium subscription: {self.user.name}"

@@ -77,5 +77,14 @@ class AdminLoginFormSerializer(serializers.ModelSerializer):
         exclude = ("mail_id", "location_id", "name")
 ### for stackoverflow
 
+## for celery
+class PremiumUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumUsers
+        fields = "__all__"
 
+class PremiumSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumSubscription
+        fields = "__all__"
 

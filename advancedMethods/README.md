@@ -310,3 +310,55 @@ def debug_task(self):
 > on the <project_folder_name> give your project name
 
 
+For the `celery`, `redis` conceepts going to create new two tables on my `models.py` one is `PremiumUsers` and other one is `PremiumSubscription` so, we're going to create users and going to set their premium subscription start and end date and their premium status is going to be `True` and we're going to schedule a task in `celery` that whenever the end date comes the celery will do the background job that set `False` for their premium status and the table look like below:
+
+```Python
+#models.py
+#for celery and redis
+class PremiumUsers(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    mail_id = models.EmailField(max_length=100, blank=False, null=False, unique=True)
+    premium_status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Premium user: {self.name}"
+
+class PremiumSubscription(models.Model):
+    user = models.ForeignKey(PremiumUsers, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Premium subscription: {self.user.name}"
+```
+next we're going to migrate it. using our `makemigrations` and `migrate` script. Then going to create serializers for two models that created above.
+
+```Python
+#serializer.py
+class PremiumUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumUsers
+        fields = "__all__"
+
+class PremiumSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumSubscription
+        fields = "__all__"
+```
+After that going to create views.
+
+```Python
+#views.py
+#for celery and redis
+class PremiumUsersListCreateAPIView(generics.ListCreateAPIView):
+    queryset  = PremiumUsers.objects.all()
+    serializer_class = PremiumUsersSerializer
+
+class PremiumSubscriptionListCreateAPIView(generics.ListCreateAPIView):
+    queryset = PremiumSubscription.objects.all()
+    serializer_class = PremiumSubscriptionSerializer
+```
+Created views for the models that we are going to use.
