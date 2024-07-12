@@ -60,7 +60,8 @@ INSTALLED_APPS = [
 
 #adding the new application
 #Added django_crontab to the INSTALLED_APPS
-INSTALLED_APPS+=['advancedMethods', 'django_crontab']
+#adding celery, django_celery_results, django_celery_beat, django_redis to the INSTALLED_APPS
+INSTALLED_APPS+=['advancedMethods', 'django_crontab', 'celery', 'django_celery_results', 'django_celery_beat', 'django_redis']
 
 
 MIDDLEWARE = [
@@ -187,3 +188,26 @@ CRONJOBS = [
     ('0 * * * *', 'advancedMethods.tasks.send_mail_in_every_one_hr'),
 
 ]
+
+
+#configuring redis cache server
+# REDIS CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
+#configuring celery
+#celery settings
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
+CELERY_TIMEZONE = 'Asia/Kolkata'
