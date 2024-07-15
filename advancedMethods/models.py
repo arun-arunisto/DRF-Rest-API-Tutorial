@@ -93,3 +93,30 @@ class PremiumSubscription(models.Model):
 
     def __str__(self):
         return f"Premium subscription: {self.user.name}"
+    
+
+class BikeModel(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    company = models.CharField(max_length=100, blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.company} - {self.name}"
+
+class Bike(models.Model):
+    register_no = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    model = models.ForeignKey(BikeModel, on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Register No: {self.register_no}"
+
+class Booking(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Booking: {self.bike.register_no}"
