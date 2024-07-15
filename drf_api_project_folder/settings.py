@@ -214,10 +214,11 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
 
-#scheduling cron job at daily 09.00AM
+
+
 CELERY_BEAT_SCHEDULE = {
     'recurring-task': {
         'task': 'advancedMethods.tasks.send_email_celery',
-        'schedule': crontab(hour=16, minute=39)
+        'schedule': crontab(hour=16, minute=54)
     },
 }
