@@ -319,3 +319,12 @@ class LocationListAPIViewMethodDecoratorSpecific(APIView):
             serialized_data.save()
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         return Response({"error":"Something went wrong when we create a data"}, status=status.HTTP_400_BAD_REQUEST)
+
+#for celery and redis
+class PremiumUsersListCreateAPIView(generics.ListCreateAPIView):
+    queryset  = PremiumUsers.objects.all()
+    serializer_class = PremiumUsersSerializer
+
+class PremiumSubscriptionListCreateAPIView(generics.ListCreateAPIView):
+    queryset = PremiumSubscription.objects.all()
+    serializer_class = PremiumSubscriptionSerializer
