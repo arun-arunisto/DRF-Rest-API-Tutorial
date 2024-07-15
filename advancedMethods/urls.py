@@ -32,7 +32,11 @@ urlpatterns =[
     path('location-list-method/', LocationListAPIViewMethodDecoratorSpecific.as_view(), name="location-list-method"),
     path('orders-create-api-view/', OrdersListCreateAPIView.as_view(), name="order-create-api-view"),
     path('premium-users/', PremiumUsersListCreateAPIView.as_view(), name='premium-users'),
-    path('premium-subscription/', PremiumSubscriptionListCreateAPIView.as_view(), name='premium-subscription')
+    path('premium-subscription/', PremiumSubscriptionListCreateAPIView.as_view(), name='premium-subscription'),
+    path("bike-list-create", BikeListCreateView.as_view(), name="bike-list-create"),
+    path("bike-model-list-create", BikeModelListCreateView.as_view(), name="bike-model-list-create"),
+    path("booking-list-create", BookingListCreateView.as_view(), name="booking-list-create"),
+    path("index-view", IndexView.as_view(), name="index-view")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

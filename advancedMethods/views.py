@@ -15,6 +15,7 @@ from urllib.parse import unquote
 from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
+from django.db.models import F
 
 
 
@@ -328,3 +329,21 @@ class PremiumUsersListCreateAPIView(generics.ListCreateAPIView):
 class PremiumSubscriptionListCreateAPIView(generics.ListCreateAPIView):
     queryset = PremiumSubscription.objects.all()
     serializer_class = PremiumSubscriptionSerializer
+
+class BikeListCreateView(generics.ListCreateAPIView):
+    queryset = Bike.objects.all()
+    serializer_class = BikeSerializer
+
+class BikeModelListCreateView(generics.ListCreateAPIView):
+    queryset = BikeModel.objects.all()
+    serializer_class = BikeModelSerializer
+
+class BookingListCreateView(generics.ListCreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+class IndexView(APIView):
+    def get(self, request):
+        data = Booking.objects.all().values("start_date", "end_date", booking_id=F("id"), register_no=F("bike__register_no"), model_name=F("bike__model__name"))
+        serialized_data = IndexViewSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)

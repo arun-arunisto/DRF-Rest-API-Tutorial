@@ -97,3 +97,26 @@ class PremiumSubscriptionSerializer(serializers.ModelSerializer):
         premium.save()
         subscription_terminate_worker.delay(premium_user.id)
         return premium
+
+class BikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bike
+        fields = "__all__"
+
+class BikeModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BikeModel
+        fields = "__all__"
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = "__all__"
+
+class IndexViewSerializer(serializers.Serializer):
+    booking_id = serializers.CharField(max_length=100)
+    register_no = serializers.CharField(max_length=100)
+    model_name = serializers.CharField(max_length=100)
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+
