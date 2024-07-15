@@ -215,6 +215,7 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 
 
 
+
 CELERY_BEAT_SCHEDULE = {
     'recurring-task': {
         'task': 'advancedMethods.tasks.send_email_celery',
