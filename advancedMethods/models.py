@@ -120,3 +120,24 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking: {self.bike.register_no}"
+
+class BlockReview(models.Model):
+    block_reason = models.IntegerField(choices=((1, "Service"), (2, "brake down"), (3, "puncture")), null=False, blank=False)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=False, blank=False)
+    block_status = models.IntegerField(choices=((0, "Pending"), (1, "rejected"), (2, "accepted")), null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Block review: {self.block_reason}"
+
+class Rides(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Ride: {self.bike.register_no}"
