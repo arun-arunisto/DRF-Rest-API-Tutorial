@@ -489,3 +489,8 @@ Configuring celery and redis for add worker & cron jobs
   pip install django-redis
   ```
 
+## 15.07.2024
+- Single serializer for multiple data from multiple column
+
+## 16.07.2024
+- For the cases like accessing elements from multiple tables using `ORM` query
