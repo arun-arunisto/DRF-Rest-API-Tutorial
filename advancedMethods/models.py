@@ -141,3 +141,8 @@ class Rides(models.Model):
 
     def __str__(self):
         return f"Ride: {self.bike.register_no}"
+
+#for bulk image upload
+class Images(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    image = models.ImageField(upload_to="uploads/")

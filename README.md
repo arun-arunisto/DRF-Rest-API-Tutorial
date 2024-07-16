@@ -494,3 +494,4 @@ Configuring celery and redis for add worker & cron jobs
 
 ## 16.07.2024
 - For the cases like accessing elements from multiple tables using `ORM` query
+- Uploading multiple images 
