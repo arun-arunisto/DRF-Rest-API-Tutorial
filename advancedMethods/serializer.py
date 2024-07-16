@@ -120,3 +120,20 @@ class IndexViewSerializer(serializers.Serializer):
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
 
+class BlockReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockReview
+        fields = "__all__"
+
+class RidesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rides
+        fields = "__all__"
+
+class IndexViewUpdateSerializer(serializers.Serializer):
+    register_no = serializers.CharField()
+    block_reason = serializers.CharField()
+    block_status = serializers.CharField()
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+
