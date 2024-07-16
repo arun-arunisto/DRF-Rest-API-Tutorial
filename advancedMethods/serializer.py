@@ -137,3 +137,8 @@ class IndexViewUpdateSerializer(serializers.Serializer):
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
 
+#for bulk image upload
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Images
+        fields = "__all__"

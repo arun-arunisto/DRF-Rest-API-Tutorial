@@ -577,3 +577,61 @@ class IndexViewUpdateView(APIView):
         serialized_data = IndexViewUpdateSerializer(data, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
 ```
+
+- Bulk image uploading, for that first i create a model named `Image` to save the data like below
+
+```Python
+class Images(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    image = models.ImageField(upload_to="uploads/")
+```
+
+Then serializer like below:
+
+```Python
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Images
+        fields = "__all__"
+```
+
+Then added a `helpers.py` file and added the below code:
+
+```Python
+def modify_input_for_multiple_files(bike, image):
+    return {
+        'bike': bike,
+        'image': image
+    }
+
+```
+
+Then views like below,
+
+```Python
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+
+    def post(self, request, *args, **kwargs):
+        bike_id = request.data.get("bike")
+
+        if not bike_id:
+            return Response({"message": "Bike ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        #converting querydict to original dict
+        images = request.FILES.getlist("image")
+
+        if not images:
+            return Response({"message": "Image is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        for img_name in images:
+            modified_data = modify_input_for_multiple_files(bike_id, img_name)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+            else:
+                return Response({"message":file_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"successfully uploaded"}, status=status.HTTP_201_CREATED)
+```
+
+The above method we used to upload multiple images at one time.

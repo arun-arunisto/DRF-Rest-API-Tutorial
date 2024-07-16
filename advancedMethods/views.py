@@ -17,7 +17,8 @@ from django.utils.decorators import method_decorator
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 from django.db.models import F,  Value
 from django.db.models.functions import Concat
-
+from .helpers import modify_input_for_multiple_files
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
 
 
@@ -368,3 +369,98 @@ class IndexViewUpdateView(APIView):
             )
         serialized_data = IndexViewUpdateSerializer(data, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+#bulk image upload
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+
+    def post(self, request, *args, **kwargs):
+        bike_id = request.data.get("bike")
+
+        if not bike_id:
+            return Response({"message": "Bike ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        #converting querydict to original dict
+        images = request.FILES.getlist("image")
+
+        if not images:
+            return Response({"message": "Image is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        for img_name in images:
+            modified_data = modify_input_for_multiple_files(bike_id, img_name)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+            else:
+                return Response({"message":file_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"successfully uploaded"}, status=status.HTTP_201_CREATED)
+"""
+class ImageView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request):
+        all_images = Image.objects.all()
+        serializer = ImageSerializer(all_images, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request, *args, **kwargs):
+        property_id = request.data['property_id']
+
+        # converts querydict to original dict
+        images = dict((request.data).lists())['image']
+        flag = 1
+        arr = []
+        for img_name in images:
+            modified_data = modify_input_for_multiple_files(property_id,
+                                                            img_name)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+                arr.append(file_serializer.data)
+            else:
+                flag = 0
+
+        if flag == 1:
+            return Response(arr, status=status.HTTP_201_CREATED)
+        else:
+            return Response(arr, status=status.HTTP_400_BAD_REQUEST)
+"""
+"""
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import ImageSerializer
+from .models import Images
+
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+
+    def post(self, request, *args, **kwargs):
+        bike_id = request.data.get("bike")
+
+        if not bike_id:
+            return Response({"message": "Bike ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Converting querydict to original dict
+        images = request.FILES.getlist('image')
+        if not images:
+            return Response({"message": "No images found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        for img in images:
+            modified_data = modify_input_for_multiple_files(bike_id, img)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+            else:
+                return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Successfully uploaded"}, status=status.HTTP_201_CREATED)
+
+def modify_input_for_multiple_files(bike_id, image):
+    return {
+        'bike': bike_id,
+        'image': image
+    }
+
+"""
