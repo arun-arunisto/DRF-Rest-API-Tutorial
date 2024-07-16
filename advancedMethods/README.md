@@ -489,3 +489,91 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 ```
+## 15.07.2024
+One Serializer for multiple columns in mulitple table
+
+For this create a serializer using `serializers.Serializer` class and then add fields like below:
+
+```Python
+class IndexViewSerializer(serializers.Serializer):
+    booking_id = serializers.CharField(max_length=100)
+    register_no = serializers.CharField(max_length=100)
+    model_name = serializers.CharField(max_length=100)
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+```
+
+After that you can annotate the data from your model (if there any case the fields name differ in serializer like below) to annotate you can use `F` from  `django.db.models` 
+
+```Python
+class IndexView(APIView):
+    def get(self, request):
+        data = Booking.objects.all().values("start_date", "end_date", booking_id=F("id"), register_no=F("bike__register_no"), model_name=F("bike__model__name"))
+        serialized_data = IndexViewSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+```
+
+## 16.07.2024
+Accessing elements from multiple tables like the scenario below:
+
+```Python
+#models.py
+class Bike(models.Model):
+    register_no = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    model = models.ForeignKey(BikeModel, on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Register No: {self.register_no}"
+
+class Booking(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Booking: {self.bike.register_no}"
+
+class BlockReview(models.Model):
+    block_reason = models.IntegerField(choices=((1, "Service"), (2, "brake down"), (3, "puncture")), null=False, blank=False)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=False, blank=False)
+    block_status = models.IntegerField(choices=((0, "Pending"), (1, "rejected"), (2, "accepted")), null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Block review: {self.block_reason}"
+
+class Rides(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Ride: {self.bike.register_no}"
+```
+
+From the below example using ORM query and fetching data's using `Rides` table, the query look like below:
+
+```Python
+#ORM query
+from django.db.models import F, Value
+from django.db.models.functions import Concat
+
+class IndexViewUpdateView(APIView):
+    def get(self, request):
+        data = Rides.objects.select_related("bike", "booking").prefetch_related("booking__blockreview_set").filter(
+            booking__blockreview__block_status=0).values(
+                "start_date", "end_date",
+                register_no=F("bike__register_no"),
+                block_reason=F("booking__blockreview__block_reason"),
+                block_status=F("booking__blockreview__block_status"),
+            )
+        serialized_data = IndexViewUpdateSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+```
