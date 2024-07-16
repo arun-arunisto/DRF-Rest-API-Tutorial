@@ -15,7 +15,8 @@ from urllib.parse import unquote
 from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
-from django.db.models import F
+from django.db.models import F,  Value
+from django.db.models.functions import Concat
 
 
 
@@ -346,4 +347,24 @@ class IndexView(APIView):
     def get(self, request):
         data = Booking.objects.all().values("start_date", "end_date", booking_id=F("id"), register_no=F("bike__register_no"), model_name=F("bike__model__name"))
         serialized_data = IndexViewSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+class BlockReviewListCreateView(generics.ListCreateAPIView):
+    queryset = BlockReview.objects.all()
+    serializer_class = BlockReviewSerializer
+
+class RidesListCreateView(generics.ListCreateAPIView):
+    queryset = Rides.objects.all()
+    serializer_class = RidesSerializer
+
+class IndexViewUpdateView(APIView):
+    def get(self, request):
+        data = Rides.objects.select_related("bike", "booking").prefetch_related("booking__blockreview_set").filter(
+            booking__blockreview__block_status=0).values(
+                "start_date", "end_date",
+                register_no=F("bike__register_no"),
+                block_reason=F("booking__blockreview__block_reason"),
+                block_status=F("booking__blockreview__block_status"),
+            )
+        serialized_data = IndexViewUpdateSerializer(data, many=True)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
