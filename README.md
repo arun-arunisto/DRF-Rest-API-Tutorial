@@ -495,3 +495,6 @@ Configuring celery and redis for add worker & cron jobs
 ## 16.07.2024
 - For the cases like accessing elements from multiple tables using `ORM` query
 - Uploading multiple images 
+
+## 08.08.2024
+- `SerializerMethodField`, `Prefetch`, `InMemoryUploadedFile` and adding image content to cloud without saving into ***Disk***
