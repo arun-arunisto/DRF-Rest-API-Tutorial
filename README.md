@@ -497,4 +497,4 @@ Configuring celery and redis for add worker & cron jobs
 - Uploading multiple images 
 
 ## 08.08.2024
-- `SerializerMethodField`, `Prefetch`, `InMemoryUploadedFile` and adding image content to cloud without saving into ***Disk***
+- `SerializerMethodField`, `Prefetch`, `InMemoryUploadedFile` and saving binary data to the database without saving to ***Disk***
