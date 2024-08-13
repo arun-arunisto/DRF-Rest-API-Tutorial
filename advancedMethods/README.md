@@ -661,3 +661,5 @@ class TripImages(models.Model):
     def __str__(self):
         return f"Trip image: {self.id}"
 ```
+
+Next we're going to add serializer and views for above models.

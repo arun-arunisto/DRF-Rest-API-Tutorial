@@ -142,3 +142,4 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Images
         fields = "__all__"
+
