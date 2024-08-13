@@ -635,3 +635,29 @@ class ImageUploadView(APIView):
 ```
 
 The above method we used to upload multiple images at one time.
+
+## 13.08.2024
+For the `SerializerMethodField`, `Prefetch`, and `InMemoryUploadedFile`, created new models to demonstrate the the above topics:
+
+```Python
+class Trip(models.Model):
+    bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    description = models.CharField(max_length=200, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Trip: {self.id}"
+    
+class TripImages(models.Model):
+    path = models.CharField(max_length=500, blank=True, null=True)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=False, blank=False)
+    image_data = models.BinaryField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Trip image: {self.id}"
+```
