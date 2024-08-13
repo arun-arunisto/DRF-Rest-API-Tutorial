@@ -168,7 +168,7 @@ class Trip(models.Model):
         return f"Trip: {self.id}"
     
 class TripImages(models.Model):
-    path = models.CharField(max_length=500, blank=True, null=True)
+    filename = models.CharField(max_length=200, null=False, blank=False)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=False, blank=False)
     image_data = models.BinaryField()
     created_at = models.DateTimeField(auto_now_add=True)

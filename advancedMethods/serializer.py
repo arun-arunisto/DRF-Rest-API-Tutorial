@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from .models import *
 from .tasks import subscription_terminate_worker
+from drf_base64_binaryfield.fields import Base64BinaryField
+
+
+#status choices
+status_choices = {0:"Ongoing", 1:"Completed", 2:"Upcoming", 3:"Cancelled"}
 
 class LogCredSerializers(serializers.ModelSerializer):
     class Meta:
@@ -143,3 +148,48 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Images
         fields = "__all__"
 
+
+
+class TripSerializerPost(serializers.Serializer):
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.IntegerField()
+
+class TripImageSerializer(serializers.Serializer):
+    path = serializers.CharField()
+    trip = serializers.IntegerField()
+    image_data = Base64BinaryField()
+
+#Trip serializer with serializer method field
+class TripSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return status_choices.get(obj["status"], "Unknown Status")
+    
+
+class TripSerializerDetailView(serializers.Serializer):
+    id = serializers.IntegerField()
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.SerializerMethodField()
+    block_images = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return status_choices.get(obj["status"], "Unknown Status")
+
+    def get_block_images(self, obj):
+        images = TripImages.objects.filter(trip__id=obj["id"])
+        if images:
+            return [image.filename for image in images]
+        else:
+            return []
