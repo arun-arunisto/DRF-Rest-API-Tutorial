@@ -148,10 +148,19 @@ class Images(models.Model):
     image = models.ImageField(upload_to="uploads/")
 
 class Trip(models.Model):
+
+    status_choices = (
+        (0, "Ongoing"),
+        (1, "Completed"),
+        (2, "Upcoming"),
+        (3, "Cancelled")
+    )
+
     bike = models.ForeignKey(Bike, on_delete=models.CASCADE, null=False, blank=False)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     description = models.CharField(max_length=200, null=True, blank=True)
+    status = models.IntegerField(choices=status_choices, null=False, blank=False, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
