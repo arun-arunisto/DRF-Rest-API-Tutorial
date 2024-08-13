@@ -637,7 +637,7 @@ class ImageUploadView(APIView):
 The above method we used to upload multiple images at one time.
 
 ## 13.08.2024
-For the `SerializerMethodField`, `Prefetch`, and `InMemoryUploadedFile`, created new models to demonstrate the the above topics:
+For the `SerializerMethodField` created new models to demonstrate the the above topics:
 
 ```Python
 class Trip(models.Model):
@@ -663,3 +663,87 @@ class TripImages(models.Model):
 ```
 
 Next we're going to add serializer and views for above models.
+
+```Python
+#serializer.py
+
+class TripSerializerPost(serializers.Serializer):
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.IntegerField()
+
+class TripImageSerializer(serializers.Serializer):
+    path = serializers.CharField()
+    trip = serializers.IntegerField()
+    image_data = Base64BinaryField()
+
+#Trip serializer with serializer method field
+class TripSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return status_choices.get(obj["status"], "Unknown Status")
+    
+
+class TripSerializerDetailView(serializers.Serializer):
+    id = serializers.IntegerField()
+    bike = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    description = serializers.CharField()
+    status = serializers.SerializerMethodField()
+    block_images = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return status_choices.get(obj["status"], "Unknown Status")
+
+    def get_block_images(self, obj):
+        images = TripImages.objects.filter(trip__id=obj["id"])
+        if images:
+            return [image.filename for image in images]
+        else:
+            return []
+
+#views.py
+
+class TripListCreateView(APIView):
+    def get(self, request):
+        data = Trip.objects.all().values("id", "bike", "start_time", "end_time", "description", "status")
+        serialized_data = TripSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        print(request.data)
+        serialized_data = TripSerializerPost(data=request.data)
+        if serialized_data.is_valid():
+            bike = serialized_data.validated_data["bike"]
+            start_time = serialized_data.validated_data["start_time"]
+            end_time = serialized_data.validated_data["end_time"]
+            description = serialized_data.validated_data["description"]
+            trip_status = serialized_data.validated_data["status"]
+            images = request.FILES.getlist("images")
+            bike_data = Bike.objects.get(id=bike)
+            trip_data = Trip.objects.create(bike=bike_data, start_time=start_time, end_time=end_time, description=description, status=trip_status)
+            if images:
+                for img in images:
+                    img_data = multiple_image_adding_function(img)
+                    TripImages.objects.create(trip=trip_data, filename=img_data["image_name"], image_data=img_data["binary_image"])
+            return Response({"message":"Trip created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TripDetailView(APIView):
+    def get(self, request, id):
+        trip_queryset = Trip.objects.filter(id=id).values("id", "bike", "start_time", "end_time", "description", "status")
+        trip = trip_queryset.first()
+        serialized_data = TripSerializerDetailView(trip)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+```
+
+On the above example we are obtaining the values from `TripImages` table and added into list then passing the data through serializer to the API using `SeializerMethodField`, and also on my current projct I am using `SerializerMethodField` for the options like above shown `status` 

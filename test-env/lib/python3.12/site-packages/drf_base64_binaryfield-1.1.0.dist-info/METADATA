@@ -1,0 +1,170 @@
+Metadata-Version: 2.1
+Name: drf-base64-binaryfield
+Version: 1.1.0
+Summary: Support for base64-encoded binary data in django rest framework serializers
+Home-page: https://github.com/Stormheg/drf-base64-binaryfield
+License: MIT
+Author: Storm Heg
+Author-email: storm@stormbase.digital
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 3.2
+Classifier: Framework :: Django :: 4.0
+Classifier: Framework :: Django :: 4.1
+Classifier: Framework :: Django :: 4.2
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Dist: django (>=3.2)
+Requires-Dist: djangorestframework (>=3.14)
+Project-URL: Changelog, https://github.com/Stormheg/drf-base64-binaryfield/releases
+Project-URL: Documentation, https://drf-base64-binaryfield.readthedocs.io
+Project-URL: Repository, https://github.com/Stormheg/drf-base64-binaryfield
+Description-Content-Type: text/markdown
+
+# drf-base64-binaryfield
+
+[![PyPI](https://img.shields.io/pypi/v/drf-base64-binaryfield.svg)][pypi status]
+[![Status](https://img.shields.io/pypi/status/drf-base64-binaryfield.svg)][pypi status]
+[![Python Version](https://img.shields.io/pypi/pyversions/drf-base64-binaryfield)][pypi status]
+[![License](https://img.shields.io/pypi/l/drf-base64-binaryfield)][license]
+
+[![Tests](https://github.com/Stormheg/drf-base64-binaryfield/actions/workflows/tests.yml/badge.svg)][tests]
+[![Codecov](https://codecov.io/gh/Stormheg/drf-base64-binaryfield/branch/main/graph/badge.svg)][codecov]
+
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
+
+[pypi status]: https://pypi.org/project/drf-base64-binaryfield/
+[tests]: https://github.com/Stormheg/drf-base64-binaryfield/actions?workflow=Tests
+[codecov]: https://app.codecov.io/gh/Stormheg/drf-base64-binaryfield
+[pre-commit]: https://github.com/pre-commit/pre-commit
+[black]: https://github.com/psf/black
+
+## Features
+
+This package provides a `Base64BinaryField` for use with Django REST Framework serializers.
+
+It allows you to:
+
+- Serialize binary data into base64 strings for use in JSON responses
+- Deserialize base64 strings back into binary data
+- Optionally use url-safe base64 encoding (replacing `+` and `/` with `-` and `_`)
+- Validate the length of the binary data
+
+**Why?** because JSON does not support binary data, and base64 is a common way to represent binary data in JSON.
+
+## Considerations
+
+Base64 encoding isn't very space efficient.
+
+If you need to send a lot of binary data quite often, you may want to consider using a more efficient serialization format instead of JSON, such as [MessagePack](https://msgpack.org/). There is a MessagePack serializer for Django REST Framework available: [django-rest-framework-msgpack](https://github.com/juanriaza/django-rest-framework-msgpack).
+
+If you only occasionally need to send binary data then base64 encoding is probably fine for your use case. This package may be suitable for you.
+
+## Requirements
+
+- Python 3.9+
+- Django 3.2+
+- Django REST Framework 3.14+
+
+## Installation
+
+You can install _drf-base64-binaryfield_ via [pip] from [PyPI]:
+
+```console
+$ pip install drf-base64-binaryfield
+```
+
+## Usage
+
+In this example, we need to send a cryptographic challenge to the client that consists of raw bytes.
+Wouldn't it be convenient if there was a way to send this data as part of JSON response?
+
+We can use `Base64BinaryField` provided by this package to serialize the binary data into a base64 string, which can be sent as part of a JSON response.
+
+```python
+from rest_framework import serializers
+from drf_base64_binaryfield.fields import Base64BinaryField
+
+class ChallengerSerializer(serializers.Serializer):
+    # This field accepts a Python bytes object and serializes it into a base64 string. Or it can deserialize a base64 string back into a bytes object.
+    challenge = Base64BinaryField()
+
+serializer = ChallengerSerializer(instance={'challenge': b'\x00\x01\x02\x03'})
+print(serializer.data)
+# {'challenge': 'AAECAw=='}
+```
+
+### Web-safe encoding
+
+If you want to use web-safe base64 encoding, you can set `url_safe=True`:
+
+```python
+
+class CryptographicChallengeSerializer(serializers.Serializer):
+    challenge = Base64BinaryField(url_safe=True)
+```
+
+### Binary data size validation
+
+This package also supports validating the size of the decoded binary data:
+
+```python
+class ExampleSerializer(serializers.Serializer):
+    # This field will only accept binary data that is between 16 and 32 bytes long
+    example_binary = Base64BinaryField(min_size=16, max_size=32)
+```
+
+### Extending `Base64BinaryField`
+
+You can extend `Base64BinaryField` to create your own custom fields. You may want to unpack the binary data into a different format, for example.
+
+```python
+import struct
+
+class CustomBinaryField(Base64BinaryField):
+    def to_internal_value(self, data):
+        binary_data = super().to_internal_value(data)
+
+        # Do something with the binary data...
+
+        # For example: unpack it as a little-endian, 32-bit unsigned integer
+        return struct.unpack('<I', binary_data)[0]
+```
+
+## Contributing
+
+Contributions are very welcome.
+To learn more, see the [Contributor Guide].
+
+## License
+
+Distributed under the terms of the [MIT license][license],
+_drf-base64-binaryfield_ is free and open source software.
+
+## Issues
+
+If you encounter any problems,
+please [file an issue] along with a detailed description.
+
+## Credits
+
+This project was generated from [@OmenApps]'s [Cookiecutter Django Package] template.
+
+[@omenapps]: https://github.com/OmenApps
+[pypi]: https://pypi.org/
+[cookiecutter django package]: https://github.com/OmenApps/cookiecutter-django-package
+[file an issue]: https://github.com/Stormheg/drf-base64-binaryfield/issues
+[pip]: https://pip.pypa.io/
+
+<!-- github-only -->
+
+[license]: https://github.com/Stormheg/drf-base64-binaryfield/blob/main/LICENSE
+[contributor guide]: https://github.com/Stormheg/drf-base64-binaryfield/blob/main/CONTRIBUTING.md
+

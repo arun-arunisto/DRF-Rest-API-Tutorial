@@ -15,9 +15,9 @@ from urllib.parse import unquote
 from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
-from django.db.models import F,  Value
+from django.db.models import F,  Value, Prefetch
 from django.db.models.functions import Concat
-from .helpers import modify_input_for_multiple_files
+from .helpers import *
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
 
@@ -465,3 +465,34 @@ def modify_input_for_multiple_files(bike_id, image):
 
 """
 
+class TripListCreateView(APIView):
+    def get(self, request):
+        data = Trip.objects.all().values("id", "bike", "start_time", "end_time", "description", "status")
+        serialized_data = TripSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        print(request.data)
+        serialized_data = TripSerializerPost(data=request.data)
+        if serialized_data.is_valid():
+            bike = serialized_data.validated_data["bike"]
+            start_time = serialized_data.validated_data["start_time"]
+            end_time = serialized_data.validated_data["end_time"]
+            description = serialized_data.validated_data["description"]
+            trip_status = serialized_data.validated_data["status"]
+            images = request.FILES.getlist("images")
+            bike_data = Bike.objects.get(id=bike)
+            trip_data = Trip.objects.create(bike=bike_data, start_time=start_time, end_time=end_time, description=description, status=trip_status)
+            if images:
+                for img in images:
+                    img_data = multiple_image_adding_function(img)
+                    TripImages.objects.create(trip=trip_data, filename=img_data["image_name"], image_data=img_data["binary_image"])
+            return Response({"message":"Trip created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TripDetailView(APIView):
+    def get(self, request, id):
+        trip_queryset = Trip.objects.filter(id=id).values("id", "bike", "start_time", "end_time", "description", "status")
+        trip = trip_queryset.first()
+        serialized_data = TripSerializerDetailView(trip)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)

@@ -37,7 +37,9 @@ urlpatterns =[
     path("bike-model-list-create", BikeModelListCreateView.as_view(), name="bike-model-list-create"),
     path("booking-list-create", BookingListCreateView.as_view(), name="booking-list-create"),
     path("index-view", IndexView.as_view(), name="index-view"),
-    path("image-upload-view", ImageUploadView.as_view(), name="image-upload-view")
+    path("image-upload-view", ImageUploadView.as_view(), name="image-upload-view"),
+    path("trip-list-create-view", TripListCreateView.as_view(), name="trip-list-create-view"),
+    path("trip-detail-view/<int:id>", TripDetailView.as_view(), name="trip-detail-view")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
