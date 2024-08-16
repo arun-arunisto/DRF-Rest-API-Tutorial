@@ -39,7 +39,8 @@ urlpatterns =[
     path("index-view", IndexView.as_view(), name="index-view"),
     path("image-upload-view", ImageUploadView.as_view(), name="image-upload-view"),
     path("trip-list-create-view", TripListCreateView.as_view(), name="trip-list-create-view"),
-    path("trip-detail-view/<int:id>", TripDetailView.as_view(), name="trip-detail-view")
+    path("trip-detail-view/<int:id>", TripDetailView.as_view(), name="trip-detail-view"),
+    path("user-role-create", UserRoleCreateView.as_view(), name="user-role-create"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

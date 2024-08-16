@@ -283,7 +283,7 @@ class AdminLoginFormViewSet(generics.GenericAPIView):
                 request.session["location_id"] = data[0]["location_id__id"]
                 request.session["admin_id"] = data[0]["id"]
                 return Response({"location_id":request.session["location_id"],
-                                 "admin_id":request.session["admin_id"]}, status=status.HTTP_200_OK)
+                                "admin_id":request.session["admin_id"]}, status=status.HTTP_200_OK)
                 # return Response({"data":data})
             else:
                 return Response({"message":"Invalid username/password"})
@@ -496,3 +496,17 @@ class TripDetailView(APIView):
         trip = trip_queryset.first()
         serialized_data = TripSerializerDetailView(trip)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+
+class UserRoleCreateView(APIView):
+    def get(self, request):
+        data = UserRoles.objects.all().values("role_name", "permissions")
+        serialized_data = userRoleSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serialized_data = userRoleSerializer(data=request.data)
+        if serialized_data.is_valid():
+            UserRoles.objects.create(**serialized_data.validated_data)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -176,3 +176,12 @@ class TripImages(models.Model):
 
     def __str__(self):
         return f"Trip image: {self.id}"
+    
+
+class UserRoles(models.Model):
+    role_name = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    permissions = models.JSONField()
+
+    def __str__(self):
+        return self.role_name
+

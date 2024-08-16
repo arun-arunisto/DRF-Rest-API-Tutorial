@@ -747,3 +747,41 @@ class TripDetailView(APIView):
 ```
 
 On the above example we are obtaining the values from `TripImages` table and added into list then passing the data through serializer to the API using `SeializerMethodField`, and also on my current projct I am using `SerializerMethodField` for the options like above shown `status` 
+
+## 16.08.2024
+
+Adding JSON data to database for that created table with `JSONField()` column like below
+
+```Python
+#models.py
+class UserRoles(models.Model):
+    role_name = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    permissions = models.JSONField()
+
+    def __str__(self):
+        return self.role_name
+```
+
+And serializer also
+
+```Python
+class userRoleSerializer(serializers.Serializer):
+    role_name = serializers.CharField()
+    permissions = serializers.JSONField()
+```
+Then views:
+
+```Python
+class UserRoleCreateView(APIView):
+    def get(self, request):
+        data = UserRoles.objects.all().values("role_name", "permissions")
+        serialized_data = userRoleSerializer(data, many=True)
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serialized_data = userRoleSerializer(data=request.data)
+        if serialized_data.is_valid():
+            UserRoles.objects.create(**serialized_data.validated_data)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+```
