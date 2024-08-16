@@ -193,3 +193,7 @@ class TripSerializerDetailView(serializers.Serializer):
             return [image.filename for image in images]
         else:
             return []
+
+class userRoleSerializer(serializers.Serializer):
+    role_name = serializers.CharField()
+    permissions = serializers.JSONField()

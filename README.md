@@ -498,3 +498,6 @@ Configuring celery and redis for add worker & cron jobs
 
 ## 08.08.2024
 - `SerializerMethodField` and saving binary data to the database without saving to ***Disk***
+
+## 16.08.2024
+- Adding `JSONField()` data to database
