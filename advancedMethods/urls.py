@@ -42,7 +42,8 @@ urlpatterns =[
     path("trip-detail-view/<int:id>", TripDetailView.as_view(), name="trip-detail-view"),
     path("user-role-create", UserRoleCreateView.as_view(), name="user-role-create"),
     path("test-table-1", TestTableViews.as_view(), name="test-table-1"),
-    path("test-table-2", TestTable2Views.as_view(), name="test-table-2")
+    path("test-table-2", TestTable2Views.as_view(), name="test-table-2"),
+    path("test-table-1/<int:pk>", TestTable1UpdateView.as_view(), name="test-table-1-update")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
