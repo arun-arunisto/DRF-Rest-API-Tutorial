@@ -185,3 +185,21 @@ class UserRoles(models.Model):
     def __str__(self):
         return self.role_name
 
+
+#creating two test tables for perform_create and perform_update
+class TestTable1(models.Model):
+    col_1 = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    col_2 = models.CharField(blank=False, null=False, max_length=100)
+    col_3 = models.CharField(blank=False, null=False, max_length=100)
+
+    def __str__(self):
+        return f"Test Table 1 Data: {self.id}"
+
+class TestTable2(models.Model):
+    test_table = models.ForeignKey(TestTable1, on_delete=models.CASCADE, null=False, blank=False)
+    col_1 = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    col_2 = models.CharField(blank=False, null=False, max_length=100)
+
+    def __str__(self):
+        return f"Test Table 2 Data: {self.id}"
+    
