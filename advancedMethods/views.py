@@ -525,6 +525,16 @@ class TestTableViews(generics.ListCreateAPIView):
         test_table_1 = TestTable1.objects.create(col_1=t_1_c_1, col_2=t_1_c_2, col_3=t_1_c_3)
         TestTable2.objects.create(test_table=test_table_1, col_1="auto added", col_2="auto added")
 
+#generics views to perform update
+class TestTable1UpdateView(generics.RetrieveUpdateAPIView):
+    queryset = TestTable1.objects.all()
+    serializer_class = TestTable1Serializer
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        #print(instance)
+        if not TestTable2.objects.filter(test_table=instance).exists():
+            TestTable2.objects.create(test_table=instance, col_1="auto added with update", col_2="auto added with update")
 class TestTable2Views(generics.ListAPIView):
     queryset = TestTable2.objects.all()
     serializer_class = TestTable2Serializer

@@ -507,3 +507,4 @@ Configuring celery and redis for add worker & cron jobs
 
 ## 22.08.2024
 - `perform_create` method for generic views
+- `perform_update` for update an instance

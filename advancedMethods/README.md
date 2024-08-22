@@ -834,3 +834,20 @@ class TestTableViews(generics.ListCreateAPIView):
         TestTable2.objects.create(test_table=test_table_1, col_1="auto added", col_2="auto added")
 ```
 
+To `perform_update` is the option to do the tasks like above for an instance going to use the `models` and `serializers` same that we used for `perform_create`.
+
+
+The view for `perform_update`:
+
+```Python
+#generics views to perform update
+class TestTable1UpdateView(generics.RetrieveUpdateAPIView):
+    queryset = TestTable1.objects.all()
+    serializer_class = TestTable1Serializer
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        #print(instance)
+        if not TestTable2.objects.filter(test_table=instance).exists():
+            TestTable2.objects.create(test_table=instance, col_1="auto added with update", col_2="auto added with update")
+```
