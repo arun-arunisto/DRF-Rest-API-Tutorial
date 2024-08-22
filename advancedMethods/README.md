@@ -785,3 +785,27 @@ class UserRoleCreateView(APIView):
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
 ```
+
+## 22.08.2024
+
+Working on `perform-create` method of generic views, to perform the `perform_create` created new two tables on models
+
+```Python
+class TestTable1(models.Model):
+    col_1 = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    col_2 = models.CharField(blank=False, null=False, max_length=100)
+    col_3 = models.CharField(blank=False, null=False, max_length=100)
+
+    def __str__(self):
+        return f"Test Table 1 Data: {self.id}"
+
+class TestTable2(models.Model):
+    test_table = models.ForeignKey(TestTable1, on_delete=models.CASCADE, null=False, blank=False)
+    col_1 = models.CharField(unique=True, blank=False, null=False, max_length=100)
+    col_2 = models.CharField(blank=False, null=False, max_length=100)
+
+    def __str__(self):
+        return f"Test Table 2 Data: {self.id}"
+```
+
+And going to perfom the operation that whenever trying to save data on `TestTable1` using `generics` views simultaneously going to update the `TestTable2` for that we're going to use `perform_create` method.
