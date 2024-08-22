@@ -502,6 +502,8 @@ Configuring celery and redis for add worker & cron jobs
 ## 16.08.2024
 - Adding `JSONField()` data to database
 
+## 19-08-2024
+- for testing purpose
 
 ## 22.08.2024
 - `perform_create` method for generic views
