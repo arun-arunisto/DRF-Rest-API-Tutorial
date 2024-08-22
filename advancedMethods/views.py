@@ -512,3 +512,19 @@ class UserRoleCreateView(APIView):
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+#genric views perform create
+class TestTableViews(generics.ListCreateAPIView):
+    queryset = TestTable1.objects.all()
+    serializer_class = TestTable1Serializer
+
+    def perform_create(self, serializer):
+        t_1_c_1 = serializer.validated_data["col_1"]
+        t_1_c_2 = serializer.validated_data["col_2"]
+        t_1_c_3 = serializer.validated_data["col_3"]
+        test_table_1 = TestTable1.objects.create(col_1=t_1_c_1, col_2=t_1_c_2, col_3=t_1_c_3)
+        TestTable2.objects.create(test_table=test_table_1, col_1="auto added", col_2="auto added")
+
+class TestTable2Views(generics.ListAPIView):
+    queryset = TestTable2.objects.all()
+    serializer_class = TestTable2Serializer

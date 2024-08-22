@@ -202,3 +202,9 @@ class TestTable1Serializer(serializers.ModelSerializer):
     class Meta:
         model = TestTable1
         fields = "__all__"
+
+class TestTable2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestTable2
+        fields = "__all__"
+        
