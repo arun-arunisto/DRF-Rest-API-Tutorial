@@ -197,3 +197,8 @@ class TripSerializerDetailView(serializers.Serializer):
 class userRoleSerializer(serializers.Serializer):
     role_name = serializers.CharField()
     permissions = serializers.JSONField()
+
+class TestTable1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestTable1
+        fields = "__all__"

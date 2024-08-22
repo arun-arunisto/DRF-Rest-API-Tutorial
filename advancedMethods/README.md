@@ -809,3 +809,12 @@ class TestTable2(models.Model):
 ```
 
 And going to perfom the operation that whenever trying to save data on `TestTable1` using `generics` views simultaneously going to update the `TestTable2` for that we're going to use `perform_create` method.
+
+For this operation we're going to use the `serializers.ModelSerializer` class like below
+
+```Python
+class TestTable1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestTable1
+        fields = "__all__"
+```
