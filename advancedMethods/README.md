@@ -851,3 +851,7 @@ class TestTable1UpdateView(generics.RetrieveUpdateAPIView):
         if not TestTable2.objects.filter(test_table=instance).exists():
             TestTable2.objects.create(test_table=instance, col_1="auto added with update", col_2="auto added with update")
 ```
+
+## 02.09.2024
+
+Adding Cron jobs using celery, for that we're going to create a new table called `VehicleRenewalPolicy` with `name`, `renewal_date` and `renewal_interval` our task is to change `renewal_date` based on `renewal_interval`  
