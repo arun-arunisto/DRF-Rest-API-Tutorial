@@ -534,7 +534,7 @@ class TestTable1UpdateView(generics.RetrieveUpdateAPIView):
         instance = serializer.save()
         #print(instance)
         if not TestTable2.objects.filter(test_table=instance).exists():
-            TestTable2.objects.create(test_table=instance, col_1="auto added with update", col_2="auto added with update")
+            TestTable2.objects.create(test_table=instance, col_1=f"auto added with update {instance.id}", col_2=f"auto added with update {instance.id}")
 class TestTable2Views(generics.ListAPIView):
     queryset = TestTable2.objects.all()
     serializer_class = TestTable2Serializer

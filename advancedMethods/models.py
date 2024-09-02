@@ -202,4 +202,15 @@ class TestTable2(models.Model):
 
     def __str__(self):
         return f"Test Table 2 Data: {self.id}"
+
+#cron job celery
+class VehicleRenewalPolicy(models.Model):
+    policy_name = models.CharField(unique=True, max_length=100, blank=False, null=False)
+    renewal_date = models.DateField()
+    renewal_interval = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.policy_name
     
