@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'MusicAPI',
     'RecipeApp',
     'LbraryApp',
+    "server_health_check",
 ]
 
 #adding the new application
