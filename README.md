@@ -511,4 +511,75 @@ Configuring celery and redis for add worker & cron jobs
   
 ## 02.09.2024
 - Adding cron job using celery
+
+## 03.10.2024
+- SERVER HEALTH CHECK Application using django rest-framework
   
+  Created an django rest api for check the health of server and database. It will help you to analyze the cpu, memory usage for your system and database it connected or not. For this i created an app named **server_health_check** and after url routeing and added to `INSTALLED_APPS` i created a `APIView` like below to check the server and db status:
+
+```Python
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+# Create your views here.
+class HealthCheckView(APIView):
+    def get(self, request):
+        data = {
+            "status":"OK",
+            "Database":self.check_database(),
+            "Server":self.check_server()
+        }
+        return Response(data)
+    
+    def check_database(self):
+        try:
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1")
+                result = cursor.fetchone()
+            connection.close()
+            if result == (1,):
+                return "Database is working fine!"
+            else:
+                return "Database connection failed!"
+        except Exception as e:
+            return "Checking connection db is failed:"+str(e)
+    
+    def check_server(self):
+        import psutil
+
+        cpu_percent  =psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory()
+        disk = psutil.disk_usage("/")
+
+        return {
+            "CPU Count":psutil.cpu_count(),
+            "CPU Usage":"{:.1f}%".format(cpu_percent),
+            "Memory Usage":"{:.1f}%".format(memory.percent),
+            "Disk Usage":"{:.1f}%".format(disk.percent),
+            "Current Running Processes Count":len(list(psutil.pids())),
+            "Running Processes": list(set([proc.name() for proc in psutil.process_iter()]))
+        }
+```
+After creating views you have to add the views to the `urls.py` like below:
+
+```Python
+from django.urls import path
+from server_health_check.views import *
+
+urlpatterns = [
+    path("health-check/", HealthCheckView.as_view(), name="server-health-check")
+]
+```
+> [!IMPORTANT] 
+> Install `psutil` before using package
+
+To install `psutil`
+
+```bash
+pip install psutil
+```
+
+The result will look like below:
+
+![Screenshot from 2024-10-03 14-50-47](https://github.com/user-attachments/assets/2ef9e3dd-8d01-4070-935e-c689fcecb5ac)
