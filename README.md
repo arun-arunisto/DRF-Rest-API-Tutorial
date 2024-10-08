@@ -582,6 +582,8 @@ pip install psutil
 
 The result will look like below:
 
+![Screenshot from 2024-10-03 14-50-47](https://github.com/user-attachments/assets/2ef9e3dd-8d01-4070-935e-c689fcecb5ac)
+
 ## 08.10.2024
 ### Configuring Sentry
 
@@ -666,5 +668,3 @@ class TestAPIView(APIView):
             sentry_sdk.capture_exception(e)
         return Response({"message":"Something went wrong!!"})
 ```
-
-
