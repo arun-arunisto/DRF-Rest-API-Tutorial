@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
+#To check the sentry debug mode
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')), #this from drf official website
@@ -35,4 +40,5 @@ urlpatterns = [
     path('api/library-api/', include('LbraryApp.urls')),
     path('api/advanced-methods-api/', include('advancedMethods.urls')),
     path("api/server/", include("server_health_check.urls")),
+    path('sentry-debug/', trigger_error), #to check the sentry debug mode
 ]

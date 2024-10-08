@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from celery.schedules import crontab
+import sentry_sdk
+
 
 load_dotenv()
 
@@ -223,3 +225,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=16, minute=54)
     },
 }
+
+#configuring senrty
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    traces_sample_rate=1.0,
+)
