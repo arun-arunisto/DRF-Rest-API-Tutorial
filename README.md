@@ -583,3 +583,88 @@ pip install psutil
 The result will look like below:
 
 ![Screenshot from 2024-10-03 14-50-47](https://github.com/user-attachments/assets/2ef9e3dd-8d01-4070-935e-c689fcecb5ac)
+
+## 08.10.2024
+### Configuring Sentry
+
+Configuring sentry on django, for that first we need to install create an account in sentry to create an account [Click Here](https://sentry.io/)
+
+After creating account install the `sentry-sdk` like below
+
+```bash
+pip install --upgrade 'sentry-sdk[django]'
+```
+
+After installing `sentry-sdk` you have to configure the `sentry` on `settings.py` like below:
+
+```Python
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+)
+```
+
+After the configuration create an custom error to check sentry configure or not like below on your projects `urls.py` file
+
+```Python
+"""
+URL configuration for drf_api_project_folder project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+
+
+#To check the sentry debug mode
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')), #this from drf official website
+    path('', include('mainApp.urls')),
+    path('api/hello-world-api/', include('helloWorld.urls')),
+    path('api/employee-details-api/', include('employeeDetails.urls')),
+    path('api/student-details-api/', include('StudentDetails.urls')),
+    path('api/todo-api/', include('TodoApp.urls')),
+    path('api/voters-details-api/', include('votersDetails.urls')),
+    path('api/spotify-api/', include('spotifyApp.urls')),
+    path('api/blog-api/', include('BlogApp.urls')),
+    path('api/books-api/', include('booksApp.urls')),
+    path("api/movie-review-api/", include('MovieReviewApp.urls')),
+    path('api/music-api/', include('MusicAPI.urls')),
+    path('api/recipe-api/', include('RecipeApp.urls')),
+    path('api/library-api/', include('LbraryApp.urls')),
+    path('api/advanced-methods-api/', include('advancedMethods.urls')),
+    path("api/server/", include("server_health_check.urls")),
+    path('sentry-debug/', trigger_error), #to check the sentry debug mode
+]
+```
+
+After that navigate to the `sentry-debug/` endpoint you will receive an error regarding your project.
+
+For the custom errors if your add to `try`, `exception` block you have to do like this below: for that I am using my last `server-health-check` application and I am going to write the custom views like below:
+
+```Python
+class TestAPIView(APIView):
+    def get(self, request):
+        try:
+            result = 1/0
+            return Response({"result":result})
+        except Exception as e:
+            sentry_sdk.capture_exception(e)
+        return Response({"message":"Something went wrong!!"})
+```

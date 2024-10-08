@@ -1,5 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import sentry_sdk
+from rest_framework import status
 
 # Create your views here.
 class HealthCheckView(APIView):
@@ -40,3 +42,13 @@ class HealthCheckView(APIView):
             "Current Running Processes Count":len(list(psutil.pids())),
             "Running Processes": list(set([proc.name() for proc in psutil.process_iter()]))
         }
+
+#for checking the sentry debug mode
+class TestAPIView(APIView):
+    def get(self, request):
+        try:
+            result = 1/0
+            return Response({"result":result})
+        except Exception as e:
+            sentry_sdk.capture_exception(e)
+            return Response({"message":"Something went wrong!!"}, status=status.HTTP_400_BAD_REQUEST)
