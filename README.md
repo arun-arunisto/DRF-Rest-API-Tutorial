@@ -668,3 +668,49 @@ class TestAPIView(APIView):
             sentry_sdk.capture_exception(e)
         return Response({"message":"Something went wrong!!"})
 ```
+
+## 22.10.2024
+### Documentation using Swagger
+Adding documentation using `swagger-ui`. For, that first you need to install `drf-yasg` use the below command to install the django restframework swagger extension
+
+```bash 
+pip install drf-yasg
+```
+
+After installing the module you have to add the module in your `settings.py` like below
+
+
+```Python
+INSTALLED_APPS = [
+    #other apps
+    'drf_yasg',
+]
+```
+After adding the module to the `INSTALLED_APPS` configure the urls for swagger like below
+
+```Python
+from django.contrib import admin
+from django.urls import path, include
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from django.conf import settings
+from django.conf.urls.static import static
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="DRF Tutorial",
+        default_version='v1',
+        description="DRF Tutorial",
+    ),
+    public=True,
+)
+
+urlpatterns = [
+    #other endpoints
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name="schema-swagger-ui"),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+]
+```
+
+Then run the command `python manage.py runserver` and  navigate to `127.0.0.1:8000/swagger/` You can find your documentation's there
