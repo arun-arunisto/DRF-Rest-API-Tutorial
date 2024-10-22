@@ -1,0 +1,49 @@
+# Dutch translation for drf_base64_binaryfield.
+# Copyright (C) 2023 Storm Heg
+# This file is distributed under the same license as the drf_base64_binaryfield package.
+# Storm Heg <storm@stormbase.digital>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-12 14:25+0100\n"
+"Last-Translator: Storm Heg <storm@stormbase.digital>\n"
+"Language: Dutch \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: drf_base64_binaryfield/fields.py:24
+#, python-brace-format
+msgid "Incorrect type. Expected a string, but got {input_type}"
+msgstr "Verkeerde type. Verwacht een string, maar kreeg {input_type}"
+
+#: drf_base64_binaryfield/fields.py:25
+msgid ""
+"Base64 is incorrectly formatted. Please check that the input is valid base64."
+msgstr ""
+"Base64 is verkeerd geformatteerd. Controleer of de invoer geldige base64 is."
+
+#: drf_base64_binaryfield/fields.py:26
+msgid ""
+"Base64 contains invalid character(s). It must contain ASCII characters only."
+msgstr "Base64 bevat ongeldige tekens. Het mag alleen ASCII tekens bevatten."
+
+#: drf_base64_binaryfield/fields.py:28 drf_base64_binaryfield/validators.py:12
+#, python-brace-format
+msgid ""
+"Ensure the binary encoded in this field is no larger than {max_size} bytes. "
+"It is {length} bytes."
+msgstr ""
+"Zorg ervoor dat de binaire data in dit veld niet groter is dan {max_size} "
+"bytes. Het is {length} bytes."
+
+#: drf_base64_binaryfield/fields.py:30 drf_base64_binaryfield/validators.py:36
+#, python-brace-format
+msgid ""
+"Ensure the binary encoded in this field is at least {min_size} bytes. It is "
+"{length} bytes."
+msgstr ""
+"Zorg ervoor dat de binaire data in dit veld minimaal {min_size} bytes is. "
+"Het is {length} bytes."

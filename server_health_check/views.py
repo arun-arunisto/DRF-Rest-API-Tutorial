@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import sentry_sdk
-from rest_framework import status
+
 
 # Create your views here.
 class HealthCheckView(APIView):
@@ -51,4 +51,4 @@ class TestAPIView(APIView):
             return Response({"result":result})
         except Exception as e:
             sentry_sdk.capture_exception(e)
-            return Response({"message":"Something went wrong!!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
