@@ -37,12 +37,14 @@ def require_admin_authentication(view_func):
     def wrapper(request, *args, **kwargs):
         auth_status = False
         try:
-            location_id = 1 #request.session.get("location_id")
-            admin_id = 1 #request.session.get("admin_id")
+            location_id = 1 #request.META.get("LOCATION_ID")
+            admin_id = 1 #request.META.get("ADMIN_ID")
             if location_id and admin_id:
                 auth_status = True 
         except:
-            return Response({"message":"Login required"}, status=status.HTTP_400_BAD_REQUEST)
+            auth_status = False
+            kwargs.update({"auth_status":auth_status})
+            return view_func(request, *args, **kwargs)
         if auth_status:
             try:
                 location_data = Location.objects.get(id=location_id)
@@ -64,7 +66,8 @@ def require_admin_authentication(view_func):
             kwargs.update({"location":location_data, "products":products_data})
             print(kwargs)
             return view_func(request, *args, **kwargs)
-        return Response({"message":"Login Required"}, status=status.HTTP_400_BAD_REQUEST)
+        kwargs.update({"auth_status":auth_status})
+        return view_func(request, *args, **kwargs)
     return wrapper
 
 
