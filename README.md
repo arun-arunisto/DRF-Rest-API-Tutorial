@@ -714,3 +714,110 @@ urlpatterns = [
 ```
 
 Then run the command `python manage.py runserver` and  navigate to `127.0.0.1:8000/swagger/` You can find your documentation's there
+
+
+## 05.11.2024
+### Testing REST API
+Writing some test cases to the API here we're going to use the `advancedMethods` api to test. First we need to create a folder called `tests` inside the `advancedMethods` app folder.
+
+### 06.11.2024
+
+Inside the `tests` folder adding different test cases for `serializers`, `models`, and `endpoints` like below
+
+ - `test_models.py`
+ - `test_serializers.py`
+ - `test_views.py`
+
+And always remember to add test in front of the test case like below
+
+```Python
+#test_serializers.py
+from rest_framework import serializers
+from django.test import TestCase
+from advancedMethods.serializer import *
+from advancedMethods.models import *
+
+
+class TestSerializersTest(TestCase):
+    def test_valid_data(self):
+        data = {
+            "role_name":"admin",
+            "permissions":{
+                "Create":True,
+                "Read":True
+            }
+        }
+        serializer = userRoleSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+    
+    def test_invalid_data(self):
+        data = {
+            "role_name":"",
+            "permissions":{
+                "Create":True,
+                "Read":True
+            }
+        }
+        serializer = userRoleSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("role_name", serializer.errors)
+
+```
+```Python
+#test_models.py
+from django.test import TestCase
+from advancedMethods.models import *
+
+
+class TestProcessModel(TestCase):
+    def test_model_fields(self):
+        model = Process.objects.create(
+            title="test",
+            days_activation=1
+        )
+        self.assertEqual(model.title, "test")
+        self.assertEqual(model.days_activation, 1)
+
+```
+
+```Python
+# test_views.py
+from rest_framework.test import APITestCase, APIClient
+from rest_framework import status
+from unittest.mock import patch
+from advancedMethods.models import *
+from django.test import TestCase, override_settings
+from pathlib import Path
+
+class AdvancedMethodsTestCase(APITestCase):
+    def setup(self):
+        pass
+
+    def test_get_endpoint(self):
+        response = self.client.get("/api/advanced-methods-api/test-table-1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # self.assertIn("id", response.json())
+    
+    def test_post_endpoint(self):
+        data = {
+            "col_1": "Hello",
+            "col_2": "Hello 1",
+            "col_3": "Hello 2"
+        }
+        response = self.client.post("/api/advanced-methods-api/test-table-1", data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+#testing with decorator function
+class LocationListAPIViewDecoratorTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.location = Location.objects.create(name="Test Location")
+        Products.objects.create(name="Test Product", location_id=self.location, price=44)
+
+    def test_get_endpoint(self):
+        response = self.client.get("/api/advanced-methods-api/location-list-api-view/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # self.assertIn("id", response.json())
+    
+
+```

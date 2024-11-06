@@ -296,6 +296,8 @@ class AdminLoginFormViewSet(generics.GenericAPIView):
 @method_decorator(require_admin_authentication, name="dispatch")
 class LocationListAPIView(APIView):
     def get(self, request, *args, **kwargs):
+        if kwargs.get("auth_status") == False:
+            return Response({"message":"You need to login"}, status=status.HTTP_400_BAD_REQUEST)
         print(kwargs.get("location").id)
         data = Location.objects.get(id=1)
         serialized_data = LocationSerializer(data)
